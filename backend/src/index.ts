@@ -8,8 +8,6 @@ const PORT = 3000;
 app.use(express.json());
 app.use('/api/products', productsRouter);
 
-
-
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
