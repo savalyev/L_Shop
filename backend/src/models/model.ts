@@ -14,7 +14,7 @@ type Address = {
 }
 
 export interface Product{
-    id: number | string;
+    id: number;
     title: string;
     price: number;
     isAvailable: boolean;

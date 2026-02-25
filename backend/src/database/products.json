@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "title": "Товар 1",
+    "price": 500,
+    "isAvailable": true,
+    "description": "Товар 1 доступен к покупке прямо сегодня!",
+    "categories": [
+      "Товары для дома",
+      "Товары для гигиены"
+    ],
+    "images": {
+      "preview": "Картинка 1"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Brest"
+      }
+    },
+    "discount": 0
+  },
+  {
+    "id": 2,
+    "title": "Игровая механическая клавиатура GX-500",
+    "price": 129.99,
+    "isAvailable": true,
+    "description": "Полноразмерная механическая клавиатура с RGB-подсветкой и сменными колпачками.",
+    "categories": [
+      "Электроника",
+      "Периферия",
+      "Игровые устройства"
+    ],
+    "images": {
+      "preview": "https://example.com/images/keyboards/gx-500/preview.jpg"
+    },
+    "discount": 10
+  }
+]
