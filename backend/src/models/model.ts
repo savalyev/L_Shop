@@ -1,5 +1,5 @@
 export interface User {
-    id: number | string;
+    id: number;
     name: string;
     password: string;
     email?: string;
@@ -32,3 +32,6 @@ export interface Product{
     discount: number;
 
 }
+
+export type ProductCreateBody = Omit<Product, 'id'>;
+export type UserCreateBody = Omit<User, 'id'>;
