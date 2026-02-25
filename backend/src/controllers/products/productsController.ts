@@ -1,4 +1,3 @@
-import { error } from "node:console";
 import { ProductsService } from "../../services/products/productsService";
 import { Request, Response } from "express";
 import { Product } from "../../models/model";
@@ -28,7 +27,7 @@ export class ProductsController{
     }
 
     static create(req: Request<{}, any, Partial<ProductCreateBody>>, res: Response) {
-        const body = req.body;
+        const body = req.body as ProductCreateBody;
 
         const newItem = ProductsService.create(body); 
         return res.status(201).json({ data: newItem });
