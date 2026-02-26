@@ -26,6 +26,68 @@ export class ProductsController{
         res.send({data: item});
     }
 
+    static getByName(req: Request, res: Response){
+        const name = req.query.name;
+
+        if (typeof name !== 'string' || name.trim() === '') {
+            return res.status(400).json({ error: 'Query-параметр "name" обязателен' });
+        }
+
+
+        const product = ProductsService.getByName(name);
+
+        if(!product){
+            return res.status(400).json({error: "Продукт с таким именем не найден"});
+        }
+
+        res.json({data: product});
+    }
+
+    static getByDescription(req: Request, res: Response){
+        const description = req.query.description;
+
+        if(typeof description !== 'string' || description.trim() === ''){
+            return res.status(400).json({error: "Query параметр 'description' обязателен"});
+        }
+
+        const product = ProductsService.getByDescription(description);
+
+        if(!product){
+            return res.status(400).json({error: "Продукт с таким описанием не найден"});
+        }
+
+        res.json({data: product});
+    }
+
+    static getAllAscending(req: Request, res: Response){
+        const data = ProductsService.getAllAscending();
+        res.json({data});
+    }
+
+    static getAllDescending(req: Request, res: Response){
+        const data = ProductsService.getAllDescending();
+        res.json({data});
+    }
+
+    static getAllFiltered(req: Request, res: Response){
+        const { category, isAvailable, minPrice, maxPrice } = req.query;
+
+        const filters = {
+        category: typeof category === 'string' ? category : undefined,
+        isAvailable:
+            typeof isAvailable === 'string'
+            ? isAvailable === 'true'
+            : undefined,
+        minPrice:
+            typeof minPrice === 'string' ? Number(minPrice) : undefined,
+        maxPrice:
+            typeof maxPrice === 'string' ? Number(maxPrice) : undefined,
+        };
+
+        const data = ProductsService.getAllFiltered(filters);
+        res.json({ data });
+    }
+
     static create(req: Request<{}, any, Partial<ProductCreateBody>>, res: Response) {
         const body = req.body as ProductCreateBody;
 

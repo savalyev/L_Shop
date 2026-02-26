@@ -29,6 +29,66 @@ export class ProductDb{
         return data.find((f: Product) => f.id === id);
     }
 
+    static getByName(name: string){
+        const data = readData();
+        const normalized = name.trim().toLowerCase();
+
+        return data.filter((p: Product) => p.title.toLowerCase().includes(normalized)
+  );
+    }
+
+    static getByDescription(description: string){
+        const data = readData();
+        const normalized = description.trim().toLocaleLowerCase();
+
+
+        return data.filter((p: Product) => p.description.toLocaleLowerCase().includes(normalized));
+    }
+
+    // по возрастанию цены
+    static getAllAscending() {
+    const data = readData();
+    return [...data].sort((a, b) => a.price - b.price);
+    }
+
+    // по убыванию цены
+    static getAllDescending() {
+    const data = readData();
+    return [...data].sort((a, b) => b.price - a.price);
+    }
+
+    static getAllFiltered(options: {
+        category?: string;
+        isAvailable?: boolean;
+        minPrice?: number;
+        maxPrice?: number;
+    }): Product[] {
+        let data = ProductDb.getAll();
+
+        if (options.category) {
+        data = data.filter(p =>
+            p.categories.some(c => c.toLowerCase() === options.category!.toLowerCase())
+        );
+        }
+
+        if (options.isAvailable !== undefined) {
+        data = data.filter(p => p.isAvailable === options.isAvailable);
+        }
+
+        if (options.minPrice !== undefined) {
+        const min = options.minPrice;
+        data = data.filter(p => p.price >= min);
+        }
+
+        if (options.maxPrice !== undefined) {
+        const max = options.maxPrice;
+        data = data.filter(p => p.price <= max);
+        }
+
+        return data;
+    }
+
+
     static create(item: Partial<Product>): Product { 
         const data = readData();
         const maxId = data.length > 0 
