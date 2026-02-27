@@ -15,6 +15,10 @@ export class UsersService {
         return UserDb.getByName(name);
     }
 
+    static updateSession(userId: number, sessionId: string) {
+        return UserDb.updateSession(userId, sessionId);
+    }
+
     static create(item: UserCreateBody): User {
         return UserDb.create(item);
     }
