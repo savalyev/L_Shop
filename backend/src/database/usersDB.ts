@@ -34,6 +34,17 @@ export class UserDb{
         return data.find((f: User) => f.name === name);
     }
 
+    static updateSession(userId: number, sessionId: string): User | undefined {
+        const data = readData();
+        const index = data.findIndex(u => u.id === userId);
+        if (index === -1) return undefined;
+
+        data[index].sessionId = sessionId;
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+
+        return data[index];
+    }
+
     static create(item: Partial<User>): User {
         const data = readData();
         const maxId = data.length > 0

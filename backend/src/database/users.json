@@ -1,16 +1,24 @@
 [
-    {
-        "id": 1,
-        "name": "Кирилл",
-        "password": "123",
-        "email": "kir8965@mail.ru",
-        "phone": "+375297459959"
-    },
-    {
-        "id": 2,
-        "name": "Леша",
-        "password": "1234",
-        "email": "Lesha123@mail.ru",
-        "phone": "+375123456789"
-    }
+  {
+    "id": 1,
+    "name": "Кирилл",
+    "password": "123",
+    "email": "kir8965@mail.ru",
+    "phone": "+375297459959"
+  },
+  {
+    "id": 2,
+    "name": "Леша",
+    "password": "1234",
+    "email": "Lesha123@mail.ru",
+    "phone": "+375123456789"
+  },
+  {
+    "id": 3,
+    "name": "kirill",
+    "password": "$2b$10$o1Rtms416LANEfpY7wP.7.LXqUKeWC1A0dN7CZlCo/DYLyH2gDfku",
+    "email": "kirill@example.com",
+    "phone": "+375291234567",
+    "sessionId": "ec968ce0d52c848121fbccbf87f3434f"
+  }
 ]
