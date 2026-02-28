@@ -93,6 +93,7 @@ npm run dev
 | Метод | Путь | Описание |
 |-------|------|----------|
 | `POST` | `/api/auth/register` | Регистрация |
+| `POST` | `/api/auth/login` | Авторизация |
 
 #### POST `/api/register` — тело запроса
 
@@ -106,6 +107,17 @@ npm run dev
 ```
 
 > `email` и `phone` — опциональны.
+
+
+ #### POST `/api/auth` — тело запроса
+
+```json
+{
+  "name": "string",
+  "password": "string",
+}
+```
+
 
 ---
 
