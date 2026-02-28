@@ -8,7 +8,7 @@ import { User, UserCreateBody } from "../../models/model";
 export class UserExistsError extends Error {
   constructor(message = 'User already exists') {
     super(message);
-    this.name = 'UserExistsError';
+    this.name = message ;
   }
 }
 
@@ -37,11 +37,19 @@ export class AuthService{
          return newUser;
     }
 
-    static Authorization(item: User){
+    static login(item: UserCreateBody){
         const user = UsersService.getByName(item.name);
 
-        if(!user || !(bcrypt.compare(item.password, user.password))){
-            return 
+        if(!user){
+          throw new UserExistsError("Пользователь не найден");
         }
+
+        const isValid = bcrypt.compareSync(item.password, user.password);
+
+        if(!isValid){
+          throw new UserExistsError("Пароль не верный!");
+        }
+
+        return user;
     }
 }
