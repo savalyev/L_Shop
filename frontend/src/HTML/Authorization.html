@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style_authorization.css">
-    <title>Авторизация</title>
+    <link rel="stylesheet" href="style_authorization.css">
+    <title>REUTKUPI | Авторизация</title>
 </head>
 
 <body>
     <div class="background">
         <div class="substrate">
             <div class="logo">
-                <img class="logo-img" src="../images/logo1.png" alt="Logo">
+                <img class="logo-img" src="../IMG/logo1.png" alt="Logo">
             </div>
 
             <section class="login-section">
                 <h1 class="login-title">Войдите по имени и паролю</h1>
                 <p class="login-subtitle">Только для зарегистрированных пользователей</p>
 
-                <form class="login-form">
+                <form class="login-form" onsubmit="handleLogin(event)">
                     <div class="input-group">
                         <input type="text" id="login" class="login-input" placeholder="Введите имя" required>
                     </div>
@@ -27,6 +27,8 @@
                     <div class="input-group">
                         <input type="password" id="password" class="login-input" placeholder="Введите пароль" required>
                     </div>
+
+                    <div id="errorMessage" style="color: red; margin-bottom: 10px; display: none;"></div>
 
                     <button type="submit" class="login-button">Войти</button>
                 </form>
@@ -37,6 +39,56 @@
             </section>
         </div>
     </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('login').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.style.display = 'none';
+
+            if (!name || !password) {
+                errorDiv.textContent = 'Пожалуйста, заполните все поля';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Ошибка входа');
+                }
+
+                // Сохраняем данные пользователя
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: data.user?.id || data.id,
+                    name: data.user?.name || data.name || name,
+                    email: data.user?.email || data.email || '',
+                    phone: data.user?.phone || data.phone || ''
+                }));
+
+                alert('Добро пожаловать! Вход выполнен успешно');
+                window.location.href = 'main.html';
+
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = error.message || 'Ошибка при входе. Проверьте имя и пароль.';
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 
 </html>
