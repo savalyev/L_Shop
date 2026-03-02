@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style_main.css">
+    <title>REUTKUPI | Интернет-магазин</title>
+</head>
+
+<body>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="container">
+            <div class="location-info">
+                <span>📍</span>
+                <span class="location-text">Минск</span>
+            </div>
+            <div class="user-links">
+                <a href="#" onclick="changePage('orders'); return false;">
+                    <span>📋</span> Заказы
+                </a>
+                <a href="#" onclick="changePage('profile'); return false;">
+                    <span>👤</span> Личный кабинет
+                </a>
+                <a href="#" onclick="openCart(); return false;">
+                    <span>🛒</span> Корзина
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="main-header">
+        <div class="container">
+            <a href="#" class="logo" onclick="changePage('home'); return false;">REUTKUPI</a>
+            <button class="catalog-btn" onclick="scrollToCategories()">
+                <span>📱</span> Каталог
+            </button>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Поиск товаров..." onkeyup="handleSearchInput(event)">
+                <button onclick="searchProducts()">Найти</button>
+            </div>
+            <div class="header-icons">
+                <div class="header-icon" onclick="openCart()">
+                    <span>🛒</span>
+                    <span>Корзина</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <div class="auth-buttons">
+                    <button class="login-btn" id="loginButton" onclick="handleAuthClick()">
+                        <span>👤</span>
+                        <span id="authButtonText">Войти</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+        <!-- Динамический контент будет загружаться сюда -->
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>REUTKUPI</h4>
+                    <a onclick="changePage('about'); return false;">О нас</a>
+                    <a onclick="changePage('jobs'); return false;">Вакансии</a>
+                    <a onclick="changePage('contacts'); return false;">Контакты</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Покупателям</h4>
+                    <a onclick="changePage('howtoorder'); return false;">Как сделать заказ</a>
+                    <a onclick="changePage('delivery'); return false;">Доставка</a>
+                    <a onclick="changePage('returns'); return false;">Возврат</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Партнерам</h4>
+                    <a onclick="changePage('sell'); return false;">Продавайте на REUTKUPI</a>
+                    <a onclick="changePage('advertise'); return false;">Рекламируйте товары</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Мы в соцсетях</h4>
+                    <a onclick="changePage('telegram'); return false;">Telegram</a>
+                    <a onclick="changePage('vk'); return false;">VK</a>
+                    <a onclick="changePage('youtube'); return false;">YouTube</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2025 REUTKUPI — Интернет-магазин. Все цены указаны в BYN. Минск
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCart()">&times;</span>
+            <h2>Корзина</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">Итого: 0 BYN</div>
+            <button class="checkout-btn" onclick="checkout()" id="checkoutBtn">Перейти к оформлению</button>
+        </div>
+    </div>
+
+    <script>
+        // =====================================================
+        // === КОНФИГУРАЦИЯ API ===
+        // =====================================================
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // =====================================================
+        // === ФУНКЦИИ ДЛЯ РАБОТЫ С API ===
+        // =====================================================
+
+        // --- Товары ---
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products`);
+                if (!response.ok) throw new Error('Ошибка загрузки товаров');
+                return await response.json();
+            } catch (error) {
+                console.error('fetchProducts error:', error);
+                showNotification('Не удалось загрузить товары', 'error');
+                return [];
+            }
+        }
+
+        async function fetchProductById(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/${id}`);
+                if (!response.ok) throw new Error('Товар не найден');
+                return await response.json();
+            } catch (error) {
+                console.error('fetchProductById error:', error);
+                showNotification('Ошибка загрузки товара', 'error');
+                return null;
+            }
+        }
+
+        async function searchProductsByName(query) {
+            if (!query.trim()) return fetchProducts();
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/by-name?name=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error('Ошибка поиска');
+                return await response.json();
+            } catch (error) {
+                console.error('searchProductsByName error:', error);
+                showNotification('Ошибка поиска', 'error');
+                return [];
+            }
+        }
+
+        async function fetchProductsSorted(order = 'ascending') {
+            try {
+                const response = await fetch(`${API_BASE_URL}/products/${order}`);
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                return await response.json();
+            } catch (error) {
+                console.error('fetchProductsSorted error:', error);
+                showNotification('Ошибка сортировки', 'error');
+                return [];
+            }
+        }
+
+        // --- Авторизация ---
+        async function registerUser(userData) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Ошибка регистрации');
+                return { success: true, data };
+            } catch (error) {
+                console.error('registerUser error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function loginUser(credentials) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(credentials)
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Ошибка входа');
+                return { success: true, data };
+            } catch (error) {
+                console.error('loginUser error:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // --- Пользователи ---
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users`);
+                if (!response.ok) throw new Error('Ошибка загрузки пользователей');
+                return await response.json();
+            } catch (error) {
+                console.error('fetchUsers error:', error);
+                return [];
+            }
+        }
+
+        async function fetchUserById(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${id}`);
+                if (!response.ok) throw new Error('Пользователь не найден');
+                return await response.json();
+            } catch (error) {
+                console.error('fetchUserById error:', error);
+                return null;
+            }
+        }
+
+        // =====================================================
+        // === СОСТОЯНИЕ ПРИЛОЖЕНИЯ ===
+        // =====================================================
+        const AppState = {
+            currentPage: 'home',
+            currentCategory: 'all',
+            searchQuery: '',
+            cart: [],
+            favorites: [],
+            orders: [],
+            user: null,
+            products: [], // Добавляем для хранения загруженных товаров
+
+            load() {
+                try {
+                    const savedCart = localStorage.getItem('cart');
+                    if (savedCart) this.cart = JSON.parse(savedCart);
+
+                    const savedFavorites = localStorage.getItem('favorites');
+                    if (savedFavorites) this.favorites = JSON.parse(savedFavorites);
+
+                    const savedOrders = localStorage.getItem('orders');
+                    if (savedOrders) this.orders = JSON.parse(savedOrders);
+
+                    const savedUser = localStorage.getItem('currentUser');
+                    if (savedUser) {
+                        this.user = JSON.parse(savedUser);
+                    }
+                } catch (e) {
+                    console.error('Ошибка загрузки данных:', e);
+                }
+            },
+
+            save() {
+                localStorage.setItem('cart', JSON.stringify(this.cart));
+                localStorage.setItem('favorites', JSON.stringify(this.favorites));
+                localStorage.setItem('orders', JSON.stringify(this.orders));
+                if (this.user) {
+                    localStorage.setItem('currentUser', JSON.stringify(this.user));
+                } else {
+                    localStorage.removeItem('currentUser');
+                }
+            },
+
+            clearCart() {
+                this.cart = [];
+                this.save();
+                updateCartCount();
+            }
+        };
+
+        // Инициализация
+        AppState.load();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadPage('home');
+            updateCartCount();
+            updateAuthButton();
+        });
+
+        // Загрузка страницы
+        async function loadPage(page) {
+            const content = document.getElementById('mainContent');
+            AppState.currentPage = page;
+
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Загрузка...</p>
+                </div>
+            `;
+
+            // Загружаем товары с сервера для главной страницы
+            if (page === 'home') {
+                AppState.products = await fetchProducts();
+            }
+
+            setTimeout(() => {
+                switch (page) {
+                    case 'home':
+                        renderHomePage();
+                        break;
+                    case 'orders':
+                        renderOrdersPage();
+                        break;
+                    case 'profile':
+                        renderProfilePage();
+                        break;
+                    default:
+                        renderInfoPage(page);
+                }
+            }, 300);
+        }
+
+        function changePage(page) {
+            loadPage(page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Функция для обработки клика по кнопке входа/выхода
+        function handleAuthClick() {
+            if (AppState.user) {
+                if (confirm('Вы хотите выйти из аккаунта?')) {
+                    logout();
+                }
+            } else {
+                window.location.href = 'Authorization.html';
+            }
+        }
+
+        // Функция выхода
+        function logout() {
+            AppState.user = null;
+            AppState.save();
+            updateAuthButton();
+            showNotification('Вы вышли из аккаунта', 'info');
+
+            if (AppState.currentPage === 'profile') {
+                changePage('home');
+            } else if (AppState.currentPage === 'orders') {
+                renderOrdersPage();
+            }
+        }
+
+        // Обновление кнопки авторизации
+        function updateAuthButton() {
+            const button = document.getElementById('loginButton');
+            const buttonText = document.getElementById('authButtonText');
+
+            if (AppState.user) {
+                button.classList.add('logout-btn');
+                buttonText.textContent = AppState.user.name || 'Профиль';
+            } else {
+                button.classList.remove('logout-btn');
+                buttonText.textContent = 'Войти';
+            }
+        }
+
+        // Главная страница
+        function renderHomePage() {
+            const content = document.getElementById('mainContent');
+            const products = AppState.products;
+
+            // Получаем уникальные категории из загруженных товаров
+            const categories = [...new Set(products.map(p => p.category))].map(cat => {
+                const icons = {
+                    'Электроника': '📱', 'Одежда': '👕', 'Дом': '🏠', 'Детям': '🧸',
+                    'Красота': '💄', 'Зоотовары': '🐕', 'Спорт': '⚽', 'Книги': '📚'
+                };
+                return {
+                    name: cat,
+                    icon: icons[cat] || '📦',
+                    count: products.filter(p => p.category === cat).length
+                };
+            });
+
+            // Фильтрация товаров
+            let filteredProducts = products;
+            if (AppState.searchQuery) {
+                const searchTerm = AppState.searchQuery.toLowerCase();
+                filteredProducts = products.filter(p =>
+                    p.name.toLowerCase().includes(searchTerm) ||
+                    (p.category && p.category.toLowerCase().includes(searchTerm))
+                );
+            } else if (AppState.currentCategory !== 'all') {
+                filteredProducts = products.filter(p => p.category === AppState.currentCategory);
+            }
+
+            content.innerHTML = `
+                <div class="banner">
+                    <div class="banner-content">
+                        <h1>Мега распродажа</h1>
+                        <p>Скидки до 50% на электронику и одежду</p>
+                        <button class="banner-btn" onclick="showAllProducts()">Смотреть все</button>
+                    </div>
+                    <div class="banner-image">🏷️</div>
+                </div>
+
+                <div class="filter-tags">
+                    <button class="filter-tag ${AppState.currentCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">Все товары</button>
+                    ${categories.map(cat => `
+                        <button class="filter-tag ${AppState.currentCategory === cat.name ? 'active' : ''}" onclick="filterByCategory('${cat.name}')">
+                            ${cat.icon} ${cat.name} (${cat.count})
+                        </button>
+                    `).join('')}
+                    ${AppState.searchQuery ? `
+                        <button class="clear-filter" onclick="clearSearch()">✕ Очистить поиск</button>
+                    ` : ''}
+                </div>
+
+                ${AppState.searchQuery ? `
+                    <div class="search-stats">
+                        Поиск по запросу "${AppState.searchQuery}": найдено ${filteredProducts.length} товаров
+                    </div>
+                ` : ''}
+
+                <h2 class="section-title">
+                    ${AppState.searchQuery ? 'Результаты поиска' : (AppState.currentCategory === 'all' ? 'Все товары' : AppState.currentCategory)}
+                </h2>
+                <div class="products-grid" id="products">
+                    ${filteredProducts.length > 0 ?
+                    filteredProducts.map(product => renderProductCard(product)).join('') :
+                    '<div class="empty-state" style="grid-column: 1/-1;">Товары не найдены</div>'
+                }
+                </div>
+            `;
+        }
+
+        // Рендер карточки товара
+        function renderProductCard(product) {
+            return `
+                <div class="product-card" onclick="viewProduct(${product.id})">
+                    ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                    <div class="product-image">🍊</div>
+                    <div class="product-title">${product.name || 'Товар'}</div>
+                    <div class="product-rating">
+                        ${'★'.repeat(Math.floor(product.rating || 4.5))}${(product.rating || 4.5) % 1 ? '½' : ''}
+                        <span class="rating-value">(${product.rating || 4.5})</span>
+                    </div>
+                    <div class="product-price">${(product.price || 0).toFixed(2)} BYN</div>
+                    ${(product.isAvailable !== false) ?
+                    `<button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">В корзину</button>` :
+                    `<button class="add-to-cart" disabled>Нет в наличии</button>`
+                }
+                </div>
+            `;
+        }
+
+        // Страница заказов
+        function renderOrdersPage() {
+            const content = document.getElementById('mainContent');
+
+            if (!AppState.user) {
+                content.innerHTML = `
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h1 class="page-title">Мои заказы</h1>
+                            <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                        </div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔒</div>
+                            <h3>Необходима авторизация</h3>
+                            <p>Войдите в аккаунт, чтобы просмотреть историю заказов</p>
+                            <button class="primary-btn" onclick="window.location.href='Authorization.html'">Войти</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            if (AppState.orders.length === 0) {
+                content.innerHTML = `
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h1 class="page-title">Мои заказы</h1>
+                            <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                        </div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📦</div>
+                            <h3>У вас пока нет заказов</h3>
+                            <p>Перейдите в каталог, чтобы выбрать товары</p>
+                            <button class="primary-btn" onclick="changePage('home')">Перейти в каталог</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h1 class="page-title">Мои заказы</h1>
+                            <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                        </div>
+                        <div style="display: grid; gap: 20px;">
+                            ${AppState.orders.map(order => `
+                                <div style="border: 1px solid #eee; padding: 20px; border-radius: 15px;">
+                                    <h3>Заказ #${order.id}</h3>
+                                    <p>Дата: ${order.date}</p>
+                                    <p>Сумма: ${order.total.toFixed(2)} BYN</p>
+                                    <p>Товаров: ${order.items.reduce((sum, item) => sum + item.quantity, 0)}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Страница профиля (Личный кабинет)
+        function renderProfilePage() {
+            const content = document.getElementById('mainContent');
+
+            if (!AppState.user) {
+                content.innerHTML = `
+                    <div class="page-content">
+                        <div class="page-header">
+                            <h1 class="page-title">Личный кабинет</h1>
+                            <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                        </div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔒</div>
+                            <h3>Необходима авторизация</h3>
+                            <p>Войдите в аккаунт, чтобы просмотреть личный кабинет</p>
+                            <button class="primary-btn" onclick="window.location.href='Authorization.html'">Войти</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            content.innerHTML = `
+                <div class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Личный кабинет</h1>
+                        <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 300px 1fr; gap: 30px;">
+                        <div style="background: #f8f9fa; padding: 30px; border-radius: 15px; text-align: center;">
+                            <div style="font-size: 100px; margin-bottom: 20px;">👤</div>
+                            <h3 style="margin-bottom: 10px;">${AppState.user.name || 'Пользователь'}</h3>
+                            <p style="color: #666; margin-bottom: 10px;">${AppState.user.email || 'Email не указан'}</p>
+                            <p style="color: #666; margin-bottom: 10px;">${AppState.user.phone || 'Телефон не указан'}</p>
+                            <p style="color: #666; margin-bottom: 20px;">ID: ${AppState.user.id || '—'}</p>
+                            <button class="add-to-cart" style="margin-bottom: 10px;" onclick="logout()">
+                                Выйти из аккаунта
+                            </button>
+                        </div>
+                        
+                        <div>
+                            <h3 style="margin-bottom: 20px;">Моя статистика</h3>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px;">
+                                    <div style="font-size: 36px; color: #005bff; margin-bottom: 10px;">${AppState.orders.length}</div>
+                                    <div>Заказов</div>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px;">
+                                    <div style="font-size: 36px; color: #005bff; margin-bottom: 10px;">${AppState.favorites.length}</div>
+                                    <div>В избранном</div>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px;">
+                                    <div style="font-size: 36px; color: #005bff; margin-bottom: 10px;">${AppState.cart.reduce((sum, item) => sum + item.quantity, 0)}</div>
+                                    <div>Товаров в корзине</div>
+                                </div>
+                                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px;">
+                                    <div style="font-size: 36px; color: #005bff; margin-bottom: 10px;">${new Date().toLocaleDateString()}</div>
+                                    <div>Текущая дата</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Информационные страницы
+        function renderInfoPage(page) {
+            const pages = {
+                'about': { title: 'О нас', content: 'REUTKUPI — это современный интернет-магазин с широким ассортиментом товаров. Мы работаем с 2020 года и радуем покупателей качественным сервисом.' },
+                'jobs': { title: 'Вакансии', content: 'У нас всегда открыты вакансии для талантливых специалистов. Присылайте резюме на career@reutkupi.by' },
+                'contacts': { title: 'Контакты', content: 'Адрес: г. Минск, ул. Колесникова, 3<br>Телефон: +375 (29) 666-67-69<br>Email: mandarinka@reutkupi.by' },
+                'howtoorder': { title: 'Как сделать заказ', content: '1. Выберите товар<br>2. Добавьте в корзину<br>3. Оформите заказ<br>4. Оплатите удобным способом' },
+                'delivery': { title: 'Доставка', content: 'Доставка по Минску — 1-2 дня, бесплатно при заказе от 100 BYN. По Беларуси — 2-5 дней.' },
+                'returns': { title: 'Возврат', content: 'Вы можете вернуть товар в течение 14 дней с момента покупки при сохранении товарного вида.' },
+                'sell': { title: 'Продавайте на REUTKUPI', content: 'Станьте нашим партнером и начните продавать свои товары миллионам покупателей.' },
+                'advertise': { title: 'Рекламируйте товары', content: 'Разместите рекламу на нашем сайте и привлеките новых клиентов.' },
+                'telegram': { title: 'Telegram', content: 'Подписывайтесь на наш Telegram-канал: @reutkupi' },
+                'vk': { title: 'VK', content: 'Наша страница ВКонтакте: vk.com/reutkupi' },
+                'youtube': { title: 'YouTube', content: 'Смотрите обзоры на нашем YouTube-канале' }
+            };
+
+            const pageInfo = pages[page] || { title: 'Страница', content: 'Содержимое страницы' };
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">${pageInfo.title}</h1>
+                        <button class="back-btn" onclick="changePage('home')">← На главную</button>
+                    </div>
+                    <div style="line-height: 1.8; font-size: 16px;">
+                        ${pageInfo.content}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Функции корзины
+        function addToCart(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+
+            if (!product) return;
+
+            if (product.isAvailable === false) {
+                showNotification('Товара нет в наличии', 'warning');
+                return;
+            }
+
+            const existingItem = AppState.cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                AppState.cart.push({ ...product, quantity: 1 });
+            }
+
+            AppState.save();
+            updateCartCount();
+            showNotification(`Товар добавлен в корзину`, 'success');
+        }
+
+        function removeFromCart(productId) {
+            AppState.cart = AppState.cart.filter(item => item.id !== productId);
+            AppState.save();
+            updateCartCount();
+            renderCart();
+        }
+
+        function updateCartCount() {
+            const count = AppState.cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function openCart() {
+            renderCart();
+            document.getElementById('cartModal').style.display = 'block';
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const totalElement = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            if (AppState.cart.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🛒</div><h3>Корзина пуста</h3></div>';
+                totalElement.textContent = 'Итого: 0 BYN';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            container.innerHTML = AppState.cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                        </div>
+                        <div class="cart-item-price">${(item.price * item.quantity).toFixed(2)} BYN</div>
+                    </div>
+                    <div class="remove-item" onclick="removeFromCart(${item.id})">Удалить</div>
+                </div>
+            `).join('');
+
+            const total = AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalElement.textContent = `Итого: ${total.toFixed(2)} BYN`;
+            checkoutBtn.disabled = false;
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity < 1) {
+                removeFromCart(productId);
+                return;
+            }
+
+            const item = AppState.cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                AppState.save();
+                renderCart();
+                updateCartCount();
+            }
+        }
+
+        function checkout() {
+            if (AppState.cart.length === 0) {
+                showNotification('Корзина пуста', 'warning');
+                return;
+            }
+
+            if (!AppState.user) {
+                showNotification('Необходимо войти в аккаунт', 'warning');
+                window.location.href = 'Authorization.html';
+                return;
+            }
+
+            const order = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString(),
+                items: [...AppState.cart],
+                total: AppState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+
+            AppState.orders.push(order);
+            AppState.clearCart();
+            closeCart();
+            showNotification('Заказ успешно оформлен!', 'success');
+        }
+
+        // Фильтрация по категории
+        function filterByCategory(category) {
+            AppState.currentCategory = category;
+            AppState.searchQuery = '';
+            document.getElementById('searchInput').value = '';
+
+            if (AppState.currentPage === 'home') {
+                renderHomePage();
+            } else {
+                changePage('home');
+            }
+        }
+
+        function showAllProducts() {
+            filterByCategory('all');
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                filterByCategory('all');
+                return;
+            }
+
+            AppState.searchQuery = query;
+            AppState.currentCategory = 'all';
+
+            if (AppState.currentPage === 'home') {
+                renderHomePage();
+            } else {
+                changePage('home');
+            }
+        }
+
+        function handleSearchInput(event) {
+            if (event.key === 'Enter') {
+                searchProducts();
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            AppState.searchQuery = '';
+            filterByCategory('all');
+        }
+
+        function viewProduct(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+            if (product) {
+                showNotification(`
+                    ${product.name}
+                    Цена: ${(product.price || 0).toFixed(2)} BYN
+                    ${product.description || 'Нет описания'}
+                `, 'info');
+            }
+        }
+
+        function scrollToCategories() {
+            const filterTags = document.querySelector('.filter-tags');
+            if (filterTags) {
+                filterTags.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                changePage('home');
+            }
+        }
+
+        // Уведомления
+        function showNotification(message, type = 'info') {
+            if (message.includes('фильтр') || message.includes('категория')) {
+                return;
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Закрытие модального окна корзины по клику вне
+        window.onclick = function (event) {
+            const cartModal = document.getElementById('cartModal');
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
