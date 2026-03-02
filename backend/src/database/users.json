@@ -20,5 +20,13 @@
     "email": "kirill@example.com",
     "phone": "+375291234567",
     "sessionId": "dc0959b4e5c992cb45247c510c7fc5da"
+  },
+  {
+    "id": 4,
+    "name": "Поплавский Арсений Дмитриевич",
+    "password": "$2b$10$nq3je1Ekl1G6YoAtScYdW.v6GtC8ZN7dn..14ghHp7YllELZtrcwy",
+    "email": "1231231756756567@gmail.com",
+    "phone": "+375295357714",
+    "sessionId": "83c9efa6cb24d0de128182ab153061dd"
   }
 ]

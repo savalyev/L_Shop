@@ -367,17 +367,17 @@
             const products = AppState.products;
 
             // Получаем уникальные категории из загруженных товаров
-            const categories = [...new Set(products.map(p => p.category))].map(cat => {
-                const icons = {
-                    'Электроника': '📱', 'Одежда': '👕', 'Дом': '🏠', 'Детям': '🧸',
-                    'Красота': '💄', 'Зоотовары': '🐕', 'Спорт': '⚽', 'Книги': '📚'
-                };
-                return {
-                    name: cat,
-                    icon: icons[cat] || '📦',
-                    count: products.filter(p => p.category === cat).length
-                };
-            });
+            // const categories = [...new Set(products.map(p => p.category))].map(cat => {
+            //     const icons = {
+            //         'Электроника': '📱', 'Одежда': '👕', 'Дом': '🏠', 'Детям': '🧸',
+            //         'Красота': '💄', 'Зоотовары': '🐕', 'Спорт': '⚽', 'Книги': '📚'
+            //     };
+            //     return {
+            //         name: cat,
+            //         icon: icons[cat] || '📦',
+            //         count: products.filter(p => p.category === cat).length
+            //     };
+            // });
 
             // Фильтрация товаров
             let filteredProducts = products;
