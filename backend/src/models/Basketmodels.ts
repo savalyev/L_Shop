@@ -1,7 +1,7 @@
 import {Product} from './model'
 
 export interface Basket{
-    id: number | string;
+    id: number;
     userId: number | string;
     basket: BasketProducts[];
 }
