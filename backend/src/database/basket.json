@@ -1,0 +1,16 @@
+[
+    {
+        "id":1,
+        "userId":2,
+        "basket":[
+            {
+                "count":100,
+                "productId":1
+            },
+            {
+                "count":2,
+                "productId":2
+            }
+        ]
+    }
+]

@@ -1,5 +1,8 @@
-import {Router} from 'express'
+import { Router } from 'express'
+import { BasketController } from '../controllers/basket/basketController';
 
 const basketRouter = Router();
 
-basketRouter.get('/basket');
+basketRouter.get('/:userId',BasketController.GetBasket);
+
+export { basketRouter };
