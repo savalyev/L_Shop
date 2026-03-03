@@ -1,5 +1,5 @@
 import { Request,Response } from "express";
-import { Basket } from '../../models/Basketmodels';
+import { Basket } from '../../models/BasketModels';
 import * as fs from 'fs';
 import * as path from 'path';
 
