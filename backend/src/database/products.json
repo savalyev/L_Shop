@@ -1,55 +1,202 @@
 [
   {
     "id": 1,
-    "title": "Товар 1",
-    "price": 500,
+    "title": "Мандарины Марокканские, 1 кг",
+    "price": 4.99,
     "isAvailable": true,
-    "description": "Товар 1 доступен к покупке прямо сегодня!",
-    "categories": [
-      "Товары для дома",
-      "Товары для гигиены"
-    ],
+    "description": "Сочные и ароматные марокканские мандарины с насыщенным вкусом. Отлично подойдут для свежих закусок и десертов.",
+    "categories": ["Фрукты", "Цитрусовые", "Продукты питания"],
     "images": {
-      "preview": "Картинка 1"
+      "preview": "https://image.danilovskymarket.ru/w:656/h:440/aHR0cHM6Ly9iYWNrLmRhbmlsb3Zza3ltYXJrZXQucnUvZmlsZXMvOTk2MjYyMzEtYTNiMy00ZDFjLWFjNzgtNTAxNDFjMDY5ZjM3JUQwJUJDJUQwJUIwJUQwJUJEJUQwJUI0JUQwJUIwJUQxJTgwJUQwJUI4JUQwJUJEJUQxJThCJTIwJUQwJUJDJUQwJUIwJUQxJTgwJUQwJUJFJUQwJUJBJUQwJUJBJUQwJUJFLmpwZw=="
     },
     "delivery": {
       "startTown": {
         "country": "Belarus",
         "town": "Brest"
-      }
+      },
+      "earlyDate": "2026-03-05T00:00:00Z",
+      "price": 3.5
+    },
+    "discount": 5
+  },
+  {
+    "id": 2,
+    "title": "Мандарины Абхазские, 1 кг",
+    "price": 5.49,
+    "isAvailable": true,
+    "description": "Сладкие и мягкие мандарины из солнечной Абхазии, почти без косточек.",
+    "categories": ["Фрукты", "Цитрусовые"],
+    "images": {
+      "preview": "https://i.ytimg.com/vi/mnOmemt74CY/maxresdefault.jpg"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Grodno"
+      },
+      "earlyDate": "2026-03-06T00:00:00Z",
+      "price": 3.0
     },
     "discount": 0
   },
   {
-    "id": 2,
-    "title": "Игровая механическая клавиатура GX-500",
-    "price": 129.99,
+    "id": 3,
+    "title": "Мандарины Клементины, 1 кг",
+    "price": 6.19,
     "isAvailable": true,
-    "description": "Полноразмерная механическая клавиатура с RGB-подсветкой и сменными колпачками.",
-    "categories": [
-      "Электроника",
-      "Периферия",
-      "Игровые устройства"
-    ],
+    "description": "Маленькие, но очень ароматные клементины — гибрид мандарина и апельсина, идеально подходят для детей.",
+    "categories": ["Фрукты", "Цитрусовые", "Экзотические"],
     "images": {
-      "preview": "https://example.com/images/keyboards/gx-500/preview.jpg"
+      "preview": "https://media.vprok.ru/products/x1400/q4/ar/aipvuqwiqqv2revnldfdftbgdqbharq4.jpeg"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Minsk"
+      },
+      "earlyDate": "2026-03-04T00:00:00Z",
+      "price": 4.0
     },
     "discount": 10
   },
   {
-    "id": 3,
-    "title": "Игровая механическая клавиатура GX-500",
-    "price": 129.99,
+    "id": 4,
+    "title": "Мандарины Испанские, 1 кг",
+    "price": 5.79,
     "isAvailable": true,
-    "description": "Полноразмерная механическая клавиатура с RGB-подсветкой и сменными колпачками.",
-    "categories": [
-      "Электроника",
-      "Периферия",
-      "Игровые устройства"
-    ],
+    "description": "Отборные мандарины из Испании — сбалансированы по сладости и кислотности.",
+    "categories": ["Фрукты", "Продукты питания"],
     "images": {
-      "preview": "https://example.com/images/keyboards/gx-500/preview.jpg"
+      "preview": "https://cxid.info/upload/670x/1701534510.jpg"
     },
-    "discount": 10
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Vitebsk"
+      },
+      "earlyDate": "2026-03-07T00:00:00Z",
+      "price": 3.9
+    },
+    "discount": 7
+  },
+  {
+    "id": 5,
+    "title": "Мандарины Турецкие, 1 кг",
+    "price": 4.59,
+    "isAvailable": true,
+    "description": "Популярные турецкие мандарины с тонкой кожурой и освежающим ароматом.",
+    "categories": ["Цитрусовые", "Фрукты"],
+    "images": {
+      "preview": "https://avatars.mds.yandex.net/get-eda/10503578/4af17f840b943f33ab7d47a3aa27c1ab/orig"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Mogilev"
+      },
+      "earlyDate": "2026-03-06T00:00:00Z",
+      "price": 3.2
+    },
+    "discount": 0
+  },
+  {
+    "id": 6,
+    "title": "Мандарины без косточек, 1 кг",
+    "price": 6.89,
+    "isAvailable": true,
+    "description": "Отборные очищенные мандарины без косточек — удобно для перекусов и детского питания.",
+    "categories": ["Фрукты", "ЗОЖ", "Для детей"],
+    "images": {
+      "preview": "https://yastatic.net/avatars/get-grocery-goods/2783132/19d0dcc7-bde9-4329-9417-b878bed94a37/464x464-origin"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Minsk"
+      },
+      "earlyDate": "2026-03-05T00:00:00Z",
+      "price": 4.1
+    },
+    "discount": 12
+  },
+  {
+    "id": 7,
+    "title": "Мандарины в сетке, 3 кг",
+    "price": 14.99,
+    "isAvailable": true,
+    "description": "Большая упаковка свежих мандаринов в удобной сетке. Отличный выбор для семьи.",
+    "categories": ["Фрукты", "Оптовые наборы"],
+    "images": {
+      "preview": "https://main-cdn.sbermegamarket.ru/big1/hlr-system/-10/951/124/892/251/37/100048530965b0.jpg"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Hrodna"
+      },
+      "earlyDate": "2026-03-07T00:00:00Z",
+      "price": 3.5
+    },
+    "discount": 8
+  },
+  {
+    "id": 8,
+    "title": "Мандарины сушёные 200 г",
+    "price": 3.29,
+    "isAvailable": true,
+    "description": "Сушёные дольки мандаринов без добавления сахара — полезный и вкусный снек.",
+    "categories": ["Снэки", "ЗОЖ", "Фрукты"],
+    "images": {
+      "preview": "https://avatars.mds.yandex.net/get-mpic/13905642/2a0000019470c6c78cd8c5a12ec215189f8d/orig"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Baranovichi"
+      },
+      "earlyDate": "2026-03-08T00:00:00Z",
+      "price": 2.9
+    },
+    "discount": 6
+  },
+  {
+    "id": 9,
+    "title": "Мандарины органические BIO, 1 кг",
+    "price": 7.89,
+    "isAvailable": true,
+    "description": "Органические мандарины, выращенные без химических удобрений. Подтвержденный BIO-сертификат.",
+    "categories": ["Фрукты", "Эко-продукты", "Цитрусовые"],
+    "images": {
+      "preview": "https://sc04.alicdn.com/kf/H278aa747354c44d2ac42860897c65751z/Hot-Selling-Papa-Mandarin-Organic-Fresh-Fruit-Sweet-and-Nutrient-Rich-Perfect-Healthy-Snacks-and-Gift-Boxes-New-Style.png"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Bobruisk"
+      },
+      "earlyDate": "2026-03-06T00:00:00Z",
+      "price": 4.5
+    },
+    "discount": 15
+  },
+  {
+    "id": 10,
+    "title": "Мандариновый набор к празднику, 2 кг",
+    "price": 12.99,
+    "isAvailable": true,
+    "description": "Подарочный набор из свежих, отборных мандаринов. Упакован в красивую коробку.",
+    "categories": ["Подарки", "Фрукты", "Наборы"],
+    "images": {
+      "preview": "https://storage.delikateska.ru/cache/9/0/34a547a1-53e3-49ce-bd82-08a96fd06205.jpg/w480qq.jpg"
+    },
+    "delivery": {
+      "startTown": {
+        "country": "Belarus",
+        "town": "Minsk"
+      },
+      "earlyDate": "2026-03-09T00:00:00Z",
+      "price": 4.9
+    },
+    "discount": 5
   }
 ]
