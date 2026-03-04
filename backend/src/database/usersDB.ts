@@ -45,6 +45,12 @@ export class UserDb{
         return data[index];
     }
 
+    static getBySessionId(sessionId: string){
+        const data = readData();
+        return data.find((f: User) => f.sessionId === sessionId);
+
+    }
+
     static create(item: Partial<User>): User {
         const data = readData();
         const maxId = data.length > 0
@@ -59,5 +65,13 @@ export class UserDb{
         data.push(newItem);
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
         return newItem;
+    }
+
+    static logout(sessionId: string){
+        const data = readData();
+        const index = data.findIndex(item => item.sessionId === sessionId);
+
+        data[index].sessionId = "";
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
     }
 }
