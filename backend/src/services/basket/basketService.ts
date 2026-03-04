@@ -1,4 +1,3 @@
-import express from 'express';
 import { BasketDB } from '../../database/basketDB';
 
 export class BasketService{
