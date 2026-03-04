@@ -1,8 +1,5 @@
 import { Request,Response } from "express";
-import { Basket } from '../../models/Basketmodels';
 import { BasketService } from '../../services/basket/basketService';
-import * as fs from 'fs';
-import * as path from 'path';
 
 
 export class BasketController{
@@ -10,18 +7,18 @@ export class BasketController{
         try{
             const userId = req.params.userId;
             if(!userId){
-                res.status(400).send({error:"userId не указан"});
+                res.status(400).send({error: "Обязательный параметр userId не указан"});
                 return;
             }
             const userbasket = await BasketService.GetBasketUserId(Number(userId));
             if(!userbasket){
-                res.status(404).send({error:'not found'});
+                res.status(404).send({error: 'Корзина пользователя не найдена'});
                 return;
             }
             res.status(200).send(userbasket);
         }
         catch(err){
-            res.status(404).send({error:"not found BasketController"})
+            res.status(404).send({error: "Ошибка корзины"})
         }
     }
 }

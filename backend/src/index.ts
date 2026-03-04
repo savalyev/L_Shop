@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use('/api/products', productsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/basket',basketRouter);
+app.use('/api/basket', basketRouter);
 
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);
