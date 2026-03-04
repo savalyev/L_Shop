@@ -26,8 +26,4 @@ export class UsersService {
     static create(item: UserCreateBody): User {
         return UserDb.create(item);
     }
-
-    static logout(sessionId: string){
-        return UserDb.logout(sessionId);
-    }
 }

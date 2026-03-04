@@ -49,20 +49,4 @@ export class UsersController{
         const newItem = UsersService.create(body);
         return res.status(200).json({data: newItem});
     }
-
-    static logout(req: Request, res: Response){
-        const sessionId = req.cookies.sessionId;
-
-        if(sessionId){
-            UsersService.logout(sessionId);
-        }
-
-        res.clearCookie('sessionId', {
-            httpOnly: true,
-            maxAge: 0,
-            sameSite: 'lax'
-        });
-
-        return res.status(200).json({message: 'logout выполнен'});
-    }
 }

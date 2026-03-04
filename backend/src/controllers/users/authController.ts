@@ -4,16 +4,16 @@ import { generateSessionId } from "../../services/users/authService";
 import { UsersService } from "../../services/users/usersService";
 import { error } from "node:console";
 
-export class authController{
-    static register(req:Request, res: Response){
+export class authController {
+    static register(req: Request, res: Response) {
         try {
-            const {name, email, phone, password } = req.body;
+            const { name, email, phone, password } = req.body;
 
             if (!name || typeof name !== 'string' || name.trim() === '') {
                 return res.status(400).json({ error: 'Name is required' });
             }
 
-            
+
             if (!password || typeof password !== 'string' || password.trim() === '') {
                 return res.status(400).json({ error: 'Password is required' });
             }
@@ -30,20 +30,20 @@ export class authController{
 
             res.cookie('sessionId', sessionId, {
                 httpOnly: true,
-                maxAge: 10*60*1000,
+                maxAge: 10 * 60 * 1000,
                 sameSite: 'lax',
             });
 
-            return res.status(201).json({data: user});
-            
-        } catch(err){
-            return res.status(400).json({error: "Пользователь не найден"});
+            return res.status(201).json({ data: user });
+
+        } catch (err) {
+            return res.status(400).json({ error: "Пользователь не найден" });
         }
     }
 
-    static login(req: Request, res: Response){
-        try{
-            const {name, password} = req.body;
+    static login(req: Request, res: Response) {
+        try {
+            const { name, password } = req.body;
 
             if (!name || typeof name !== 'string' || name.trim() === '') {
                 return res.status(400).json({ error: 'Name is required' });
@@ -62,13 +62,29 @@ export class authController{
 
             res.cookie('sessionId', sessionId, {
                 httpOnly: true,
-                maxAge: 10*60*1000,
+                maxAge: 10 * 60 * 1000,
                 sameSite: 'lax',
             });
 
-            return res.status(201).json({data: user});
-        } catch(err){
-            return res.status(400).json({error: err});
+            return res.status(201).json({ data: user });
+        } catch (err) {
+            return res.status(400).json({ error: err });
         }
+    }
+
+    static logout(req: Request, res: Response) {
+        const sessionId = req.cookies.sessionId;
+
+        if (sessionId) {
+            AuthService.logout(sessionId);
+        }
+
+        res.clearCookie('sessionId', {
+            httpOnly: true,
+            maxAge: 0,
+            sameSite: 'lax'
+        });
+
+        return res.status(200).json({ message: 'logout выполнен' });
     }
 }

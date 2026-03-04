@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 
 import { UsersService } from "./usersService";
 import { User, UserCreateBody } from "../../models/model";
+import { UserDb } from '../../database/usersDB';
 
 export class UserExistsError extends Error {
   constructor(message = 'User already exists') {
@@ -51,5 +52,9 @@ export class AuthService{
         }
 
         return user;
+    }
+
+    static logout(sessionId: string){
+      return UserDb.logout(sessionId);
     }
 }
