@@ -23,4 +23,7 @@ userRouter.get("/:id", UsersController.getById);
 //POST запрос, создание пользователя
 userRouter.post("/", validateUserCreate, UsersController.create);
 
+//POST запрос, логаут юзера
+userRouter.post("/logout", UsersController.logout);
+
 export {userRouter};

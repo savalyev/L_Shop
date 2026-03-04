@@ -72,6 +72,8 @@ npm run dev
 | `GET` | `/api/users/:id` | Пользователь по ID |
 | `GET` | `/api/users/by-name?name=` | Поиск по имени |
 | `POST` | `/api/users` | Создать пользователя |
+| `GET` | `/api/users/me` | Получение пользователя по сессии |
+| `POST` | `/api/users/logout` | Очистка сессиии |
 
 #### POST `/api/users` — тело запроса
 
