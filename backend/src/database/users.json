@@ -36,5 +36,13 @@
     "email": "kir8965@mail.ru",
     "phone": "+375297459959",
     "sessionId": "347157b08a41108e73c656ffea5681f1"
+  },
+  {
+    "id": 6,
+    "name": "leviks",
+    "password": "$2b$10$NQP0tma9o.F.A5qtOdKG2O1UldAuhm3Owz3d9TKZyht3k/NkhLPKG",
+    "email": "duboviklev88@gmail.com",
+    "phone": "+375295303223",
+    "sessionId": "c79284cec71746212a91f3a8bf0cb3eb"
   }
 ]
