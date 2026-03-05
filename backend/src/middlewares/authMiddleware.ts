@@ -17,7 +17,7 @@ function authMiddleware(req: Request, res: Response, next: NextFunction){
         return res.status(401).json({error: "Invalid session"})
     }
 
-    (req as any).user = user;
+    res.locals.user = user;
 
     next();
 }
