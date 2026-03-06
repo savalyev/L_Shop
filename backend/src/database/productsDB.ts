@@ -11,7 +11,7 @@ function readData(): Product[] {
             return [];
         }
         const raw = fs.readFileSync(filePath, 'utf-8');
-        const parsed = JSON.parse(raw);
+        const parsed: Product[] = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed as Product[] : [];
     } catch (err) {
         console.error('Ошибка чтения JSON:', err);
@@ -20,16 +20,16 @@ function readData(): Product[] {
 }
 
 export class ProductDb{
-    static getAll(){
+    static getAll(): Product[] {
         return readData();
     }
 
-    static getById(id: number){
+    static getById(id: number): Product | undefined {
         const data = readData();
         return data.find((f: Product) => f.id === id);
     }
 
-    static getByName(name: string){
+    static getByName(name: string): Product[] | undefined {
         const data = readData();
         const normalized = name.trim().toLowerCase();
 
@@ -37,22 +37,27 @@ export class ProductDb{
   );
     }
 
-    static getByDescription(description: string){
+    static getByDescription(description: string): Product[] | undefined {
         const data = readData();
-        const normalized = description.trim().toLocaleLowerCase();
+        const normalized = description.trim().toLowerCase();
 
 
-        return data.filter((p: Product) => p.description.toLocaleLowerCase().includes(normalized));
+        return data.filter((p: Product) => p.description.toLowerCase().includes(normalized));
+    }
+
+    static getByMassId(ids: number[]): Product[] {
+        const data = readData();
+        return data.filter(p => ids.includes(p.id));
     }
 
     // по возрастанию цены
-    static getAllAscending() {
+    static getAllAscending(): Product[] {
     const data = readData();
     return [...data].sort((a, b) => a.price - b.price);
     }
 
     // по убыванию цены
-    static getAllDescending() {
+    static getAllDescending(): Product[] {
     const data = readData();
     return [...data].sort((a, b) => b.price - a.price);
     }
