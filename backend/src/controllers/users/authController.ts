@@ -43,9 +43,9 @@ export class authController {
 
     static login(req: Request, res: Response) {
         try {
-            const { name, password } = req.body;
+            const { login, password } = req.body;
 
-            if (!name || typeof name !== 'string' || name.trim() === '') {
+            if (!login || typeof login !== 'string' || login.trim() === '') {
                 return res.status(400).json({ error: 'Name is required' });
             }
             if (!password || typeof password !== 'string' || password.trim() === '') {
@@ -53,9 +53,14 @@ export class authController {
             }
 
             const user = AuthService.login({
-                name: name.trim(),
+                name: login.trim(),
                 password: password
             });
+
+            if(!user){
+                res.status(400).json({error: "Пользователь не найден"});
+                return;
+            }
 
             const sessionId = generateSessionId();
             UsersService.updateSession(user.id, sessionId);

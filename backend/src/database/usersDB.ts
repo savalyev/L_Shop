@@ -34,6 +34,16 @@ export class UserDb{
         return data.find((f: User) => f.name === name);
     }
 
+    static getByPhone(phone: string): User | undefined {
+        const data = readData();
+        return data.find((f: User) => f.phone === phone);
+    }
+
+    static getByEmail(email: string): User | undefined {
+        const data = readData();
+        return data.find((f: User) => f.email === email);
+    }
+
     static updateSession(userId: number, sessionId: string): User | undefined {
         const data = readData();
         const index = data.findIndex(u => u.id === userId);
