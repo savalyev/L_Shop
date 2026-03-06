@@ -29,4 +29,7 @@ productsRouter.get('/:id', ProductsController.getById);
 //POST запрос, создание продукта
 productsRouter.post('/', validateProductCreate, ProductsController.create);
 
+//POST запрос, получение продуктов по массиву id
+productsRouter.post("/for-basket", ProductsController.getByMassId);
+
 export {productsRouter};
