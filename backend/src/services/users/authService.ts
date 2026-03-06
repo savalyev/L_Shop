@@ -39,10 +39,16 @@ export class AuthService{
     }
 
     static login(item: UserCreateBody){
-        const user = UsersService.getByName(item.name);
+        let user = UsersService.getByName(item.name);
 
         if(!user){
-          throw new UserExistsError("Пользователь не найден");
+          user = UsersService.getByEmail(item.name);
+          if(!user){
+            user = UsersService.getByPhone(item.name);
+            if(!user){
+              throw new UserExistsError("Пользователь не найден");
+            }
+          }
         }
 
         const isValid = bcrypt.compareSync(item.password, user.password);

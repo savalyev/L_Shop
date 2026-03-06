@@ -15,6 +15,14 @@ export class UsersService {
         return UserDb.getByName(name);
     }
 
+    static getByPhone(phone: string): User | undefined {
+        return UserDb.getByPhone(phone);
+    }
+
+    static getByEmail(email: string): User | undefined {
+        return UserDb.getByEmail(email);
+    }
+
     static updateSession(userId: number, sessionId: string) {
         return UserDb.updateSession(userId, sessionId);
     }
