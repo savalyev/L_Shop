@@ -11,7 +11,7 @@ function readData(): User[] {
             return [];
         }
         const raw = fs.readFileSync(filePath, 'utf-8');
-        const parsed = JSON.parse(raw);
+        const parsed: User[] = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed as User[] : [];
     } catch (e){
         console.error("Ошибка чтения JSON user: ", e);
@@ -20,16 +20,16 @@ function readData(): User[] {
 }
 
 export class UserDb{
-    static getAll(){
+    static getAll(): User[] {
         return readData();
     }
 
-    static getById(id: number){
+    static getById(id: number): User | undefined {
         const data = readData();
         return data.find((f: User) => f.id === id);
     }
 
-    static getByName(name: string){
+    static getByName(name: string): User | undefined {
         const data = readData();
         return data.find((f: User) => f.name === name);
     }
@@ -55,7 +55,7 @@ export class UserDb{
         return data[index];
     }
 
-    static getBySessionId(sessionId: string){
+    static getBySessionId(sessionId: string): User | undefined {
         const data = readData();
         return data.find((f: User) => f.sessionId === sessionId);
 
@@ -77,7 +77,7 @@ export class UserDb{
         return newItem;
     }
 
-    static logout(sessionId: string){
+    static logout(sessionId: string): void {
         const data = readData();
         const index = data.findIndex(item => item.sessionId === sessionId);
 

@@ -6,63 +6,52 @@ import { error } from "node:console";
 type UserCreateBody = Omit<User, 'id'>;
 
 export class UsersController{
-    static getAll(req: Request, res: Response){
+    static getAll(req: Request, res: Response): void{
         const data = UsersService.getAll();
         res.send({data});
     }
 
-    static getById(req: Request, res: Response){
+    static getById(req: Request, res: Response): void {
         const idParam = req.params.id;
         const id = Number(idParam);
 
         if(Number.isNaN(id)){
-            return res.status(400).send({error: "Invalid id"});
+            res.status(400).send({error: "Invalid id"});
+            return;
         }
 
         const item = UsersService.getById(id);
+
         if(!item){
-            return res.status(400).send({error: "Not found"});
+            res.status(400).send({error: "Not found"});
+            return;
         }
 
         res.send({data: item});
     }
 
-    static getByName(req: Request, res: Response) {
+    static getByName(req: Request, res: Response): void {
         const name = req.query.name;
 
         if (typeof name !== 'string' || name.trim() === '') {
-        return res.status(400).json({ error: 'Query-параметр "name" обязателен' });
+            res.status(400).json({ error: 'Query-параметр "name" обязателен' });
+            return;
         }
 
         const user = UsersService.getByName(name);
 
         if (!user) {
-        return res.status(404).json({ error: 'Пользователь не найден' });
+            res.status(404).json({ error: 'Пользователь не найден' });
+            return;
         }
 
-        return res.json({ data: user });
+        res.json({ data: user });
     }
 
-    static create(req: Request<{}, any, Partial<UserCreateBody>>, res: Response){
+    static create(req: Request<{}, any, Partial<UserCreateBody>>, res: Response): void {
         const body = req.body as UserCreateBody;
 
         const newItem = UsersService.create(body);
-        return res.status(200).json({data: newItem});
-    }
-
-    static logout(req: Request, res: Response){
-        const sessionId = req.cookies.sessionId;
-
-        if(sessionId){
-            UsersService.logout(sessionId);
-        }
-
-        res.clearCookie('sessionId', {
-            httpOnly: true,
-            maxAge: 0,
-            sameSite: 'lax'
-        });
-
-        return res.status(200).json({message: 'logout выполнен'});
+        res.status(200).json({data: newItem});
     }
 }

@@ -22,7 +22,7 @@ export function generateSessionId(): string {
 }
 
 export class AuthService{
-    static register(item: UserCreateBody){
+    static register(item: UserCreateBody): User {
          const user = UsersService.getByName(item.name);
 
          if(user){
@@ -38,7 +38,7 @@ export class AuthService{
          return newUser;
     }
 
-    static login(item: UserCreateBody){
+    static login(item: UserCreateBody): User {
         let user = UsersService.getByName(item.name);
 
         if(!user){
@@ -60,7 +60,7 @@ export class AuthService{
         return user;
     }
 
-    static logout(sessionId: string){
+    static logout(sessionId: string): void {
       return UserDb.logout(sessionId);
     }
 }

@@ -1,20 +1,20 @@
-import cookieParser from "cookie-parser";
 import { Request, Response } from "express";
 import { NextFunction } from "express";
-import { error } from "node:console";
 import { UsersService } from "../services/users/usersService";
 
-function authMiddleware(req: Request, res: Response, next: NextFunction){
+function authMiddleware(req: Request, res: Response, next: NextFunction): void{
     const sessionId = req.cookies.sessionId;
     
     if(!sessionId){
-        return res.status(400).json({error: 'Not auth'});
+        res.status(400).json({error: 'Not auth'});
+        return;
     }
 
     const user = UsersService.getBySessionId(sessionId);
 
     if(!user){
-        return res.status(401).json({error: "Invalid session"})
+        res.status(401).json({error: "Invalid session"});
+        return;
     }
 
     res.locals.user = user;
