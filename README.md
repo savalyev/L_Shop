@@ -32,6 +32,7 @@ npm run dev
 | `GET` | `/api/products/descending` | Все товары, цена ↓ |
 | `GET` | `/api/products/fillters?...` | Товары с фильтрами |
 | `POST` | `/api/products` | Создать товар |
+| `POST` | `/api/products/for-basket` | Получение товаров по массиву ID
 
 #### POST `/api/products` — тело запроса
 
@@ -111,7 +112,7 @@ npm run dev
 > `email` и `phone` — опциональны.
 
 
- #### POST `/api/auth` — тело запроса
+ #### POST `/api/auth/login` — тело запроса
 
 ```json
 {
@@ -120,6 +121,23 @@ npm run dev
 }
 ```
 
+---
+
+### Basket - `/api/basket`
+
+| Метод | Путь | Описание |
+|-------|------|----------|
+| `GET` | `/api/basket/mybasket` | Получение корзины пользователя по Cookies |
+| `GET` | `/api/basket/:userId` | Получение корзины пользователя по UserID |
+| `POST` | `/api/basket/add-to-basket` | Добавление товара в корзину по Cookies | 
+
+#### POST `/api/basket/add-to-basket` — тело запроса
+
+```json
+{
+  "product": number
+}
+```
 
 ---
 
