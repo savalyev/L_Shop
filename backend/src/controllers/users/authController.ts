@@ -5,17 +5,19 @@ import { UsersService } from "../../services/users/usersService";
 import { error } from "node:console";
 
 export class authController {
-    static register(req: Request, res: Response) {
+    static register(req: Request, res: Response): void {
         try {
             const { name, email, phone, password } = req.body;
 
             if (!name || typeof name !== 'string' || name.trim() === '') {
-                return res.status(400).json({ error: 'Name is required' });
+                res.status(400).json({ error: 'Name is required' });
+                return;
             }
 
 
             if (!password || typeof password !== 'string' || password.trim() === '') {
-                return res.status(400).json({ error: 'Password is required' });
+                res.status(400).json({ error: 'Password is required' });
+                return;
             }
 
             const user = AuthService.register({
@@ -34,22 +36,25 @@ export class authController {
                 sameSite: 'lax',
             });
 
-            return res.status(201).json({ data: user });
+            res.status(201).json({ data: user });
 
         } catch (err) {
-            return res.status(400).json({ error: "Пользователь не найден" });
+            res.status(400).json({ error: "Пользователь не найден" });
+            return;
         }
     }
 
-    static login(req: Request, res: Response) {
+    static login(req: Request, res: Response): void {
         try {
             const { login, password } = req.body;
 
             if (!login || typeof login !== 'string' || login.trim() === '') {
-                return res.status(400).json({ error: 'Name is required' });
+                res.status(400).json({ error: 'Name is required' });
+                return;
             }
             if (!password || typeof password !== 'string' || password.trim() === '') {
-                return res.status(400).json({ error: 'Password is required' });
+                res.status(400).json({ error: 'Password is required' });
+                return;
             }
 
             const user = AuthService.login({
@@ -71,14 +76,21 @@ export class authController {
                 sameSite: 'lax',
             });
 
-            return res.status(201).json({ data: user });
+            res.status(201).json({ data: user });
+
         } catch (err) {
-            return res.status(400).json({ error: err });
+            res.status(400).json({ error: err });
+            return;
         }
     }
 
-    static logout(req: Request, res: Response) {
+    static logout(req: Request, res: Response): void {
         const sessionId = req.cookies.sessionId;
+
+        if(typeof sessionId !== 'string' || !sessionId){
+            res.status(400).json({error: "Invalid session"});
+            return;
+        }
 
         if (sessionId) {
             AuthService.logout(sessionId);
@@ -90,6 +102,6 @@ export class authController {
             sameSite: 'lax'
         });
 
-        return res.status(200).json({ message: 'logout выполнен' });
+        res.status(200).json({ message: 'logout выполнен' });
     }
 }

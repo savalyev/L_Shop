@@ -3,15 +3,15 @@ import { User } from "../../models/model";
 import { UserCreateBody } from "../../models/model";
 
 export class UsersService {
-    static getAll(){
+    static getAll(): User[] {
         return UserDb.getAll();
     }
 
-    static getById(id: number){
+    static getById(id: number): User | undefined {
         return UserDb.getById(id);
     }
 
-    static getByName(name: string){
+    static getByName(name: string): User | undefined {
         return UserDb.getByName(name);
     }
 
@@ -23,11 +23,11 @@ export class UsersService {
         return UserDb.getByEmail(email);
     }
 
-    static updateSession(userId: number, sessionId: string) {
+    static updateSession(userId: number, sessionId: string): User | undefined {
         return UserDb.updateSession(userId, sessionId);
     }
 
-    static getBySessionId(sessionId: string){
+    static getBySessionId(sessionId: string): User | undefined {
         return UserDb.getBySessionId(sessionId);
     }
 
@@ -35,7 +35,7 @@ export class UsersService {
         return UserDb.create(item);
     }
 
-    static logout(sessionId: string){
+    static logout(sessionId: string): void {
         return UserDb.logout(sessionId);
     }
 }

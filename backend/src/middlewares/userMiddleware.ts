@@ -7,17 +7,19 @@ export function validateUserCreate(
     req: Request<{}, any, Partial<UserCreateBody>>,
     res: Response,
     next: NextFunction
-){
+): void {
     const body = req.body || {};
 
     //name
     if(typeof body.name !== 'string' || body.name.trim() === ''){
-        return res.status(400).json({error: "Поле name обязательно"});
+        res.status(400).json({error: "Поле name обязательно"});
+        return;
     }
 
     //password
     if(typeof body.password !== 'string' || body.password.trim() === ""){
-        return res.status(400).json({error: "Поле password обязательно"});
+        res.status(400).json({error: "Поле password обязательно"});
+        return;
     }
 
     req.body = {
