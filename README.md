@@ -1,8 +1,6 @@
 # L_Shop
 
-Интернет-магазин. Проект в разработке.
-
-**Стек:** Node.js · TypeScript · Express · React
+Интернет-магазин.
 
 ---
 
@@ -116,7 +114,7 @@ npm run dev
 
 ```json
 {
-  "name": "string",
+  "login": "string",
   "password": "string",
 }
 ```
@@ -135,7 +133,7 @@ npm run dev
 
 ```json
 {
-  "product": number
+  "productId": number
 }
 ```
 
