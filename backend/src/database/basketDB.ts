@@ -4,39 +4,39 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const filePath = path.resolve(__dirname, 'basket.json');
-const filePathProduct = path.resolve(__dirname,'products.json');
+const filePathProduct = path.resolve(__dirname, 'products.json');
 
-function getData():Basket[]{
-    const file = fs.readFileSync(filePath,'utf-8');
+function getData(): Basket[] {
+    const file = fs.readFileSync(filePath, 'utf-8');
 
-    const allbasket: Basket[] = JSON.parse(file); 
+    const allbasket: Basket[] = JSON.parse(file);
 
     return allbasket;
 }
 
-function getDataProduct():Product[]{
-    const file = fs.readFileSync(filePathProduct,'utf-8');
+function getDataProduct(): Product[] {
+    const file = fs.readFileSync(filePathProduct, 'utf-8');
 
-    const allproducts: Product[] = JSON.parse(file); 
+    const allproducts: Product[] = JSON.parse(file);
 
     return allproducts;
 }
 
-export class BasketDB{
+export class BasketDB {
 
-    public static GetBasketUserId(userId:number){
+    public static GetBasketUserId(userId: number) {
 
-            const allbasket: Basket[] = getData();
-
-            const userbasket = allbasket.find(b=>String(b.userId)===String(userId));
-            
-            return userbasket;
-    }
-
-    private static CreatBasket(userId:number){
         const allbasket: Basket[] = getData();
 
-        let maxId = allbasket.length+1;
+        const userbasket = allbasket.find(b => String(b.userId) === String(userId));
+
+        return userbasket;
+    }
+
+    private static CreatBasket(userId: number) {
+        const allbasket: Basket[] = getData();
+
+        let maxId = allbasket.length + 1;
 
         const userBasket: Basket = {
             id: maxId,
@@ -45,54 +45,54 @@ export class BasketDB{
         };
 
         allbasket.push(userBasket);
-        fs.writeFileSync(filePath,JSON.stringify(allbasket,null,2));
+        fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
 
         return userBasket;
     }
 
 
-    public static async AddtoBasket(userId:number, productId:number){
+    public static async AddtoBasket(userId: number, productId: number) {
 
-            let userbasket = this.GetBasketUserId(userId);
+        let userbasket = this.GetBasketUserId(userId);
 
-            if(!userbasket){
-                userbasket =this.CreatBasket(userId);
+        if (!userbasket) {
+            userbasket = this.CreatBasket(userId);
+        }
+
+        const allproduct: Product[] = getDataProduct();
+        let product = allproduct.find(product => product.id === productId);
+
+        if (!product) {
+            throw new Error("Product not found");
+        }
+
+        const existproduct = userbasket.basket.find(prod => prod.products?.id === product.id);
+
+        if (existproduct) {
+            existproduct.count += 1;
+        }
+        else {
+
+            const BasketProduct = {
+                count: 1,
+                products: product
             }
 
-            const allproduct: Product[] = getDataProduct();
-            let product = allproduct.find(product => product.id === productId );
+            userbasket.basket.push(BasketProduct);
+        }
 
-            if(!product){
-                throw new Error("Product not found");
-            }
+        const allbasket: Basket[] = getData();
+        const index = allbasket.findIndex(basket => String(basket.userId) === String(userId));
 
-            const existproduct = userbasket.basket.find(prod => prod.products?.id === product.id);
+        if (index !== -1) {
+            allbasket[index] = userbasket;
+        }
+        else {
+            allbasket.push(userbasket);
+        }
 
-            if(existproduct){
-                existproduct.count +=1;
-            }
-            else{
+        fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
 
-                const BasketProduct = {
-                    count:1,
-                    products:product
-                }
-
-                userbasket.basket.push(BasketProduct);
-            }
-            
-            const allbasket: Basket[] = getData();
-            const index = allbasket.findIndex(basket => String(basket.userId)===String(userId));
-            
-            if(index !== -1){
-                allbasket[index]=userbasket;
-            }
-            else{
-                allbasket.push(userbasket);
-            }
-           
-            fs.writeFileSync(filePath,JSON.stringify(allbasket,null,2));
-
-            return userbasket;
+        return userbasket;
     }
 }

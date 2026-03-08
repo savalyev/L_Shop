@@ -1,7 +1,6 @@
 import { Request,Response,NextFunction } from 'express';
 import { UsersService } from '../services/users/usersService';
 import { BasketService } from '../services/basket/basketService';
-import cookieParser from 'cookie-parser';
 
 
 export class MiddleBasket{

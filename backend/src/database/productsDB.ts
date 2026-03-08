@@ -50,13 +50,11 @@ export class ProductDb{
         return data.filter(p => ids.includes(p.id));
     }
 
-    // по возрастанию цены
     static getAllAscending(): Product[] {
     const data = readData();
     return [...data].sort((a, b) => a.price - b.price);
     }
 
-    // по убыванию цены
     static getAllDescending(): Product[] {
     const data = readData();
     return [...data].sort((a, b) => b.price - a.price);
