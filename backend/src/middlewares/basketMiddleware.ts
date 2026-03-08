@@ -4,32 +4,36 @@ import { BasketService } from '../services/basket/basketService';
 
 
 export class MiddleBasket{
-    public static validateBasket(req:Request,res:Response,next:NextFunction){
+    public static validateBasket(req:Request,res:Response,next:NextFunction):void{
         const sessionId = req.cookies.sessionId;
 
         const user = UsersService.getBySessionId(sessionId);
         if(!user){
-            return res.status(400).send({error:"user not verificate"});
+            res.status(400).send({error:"user not verificate"});
+            return;
         }
         const basket = BasketService.GetBasketUserId(user.id);
         if(!basket){
-            return res.status(400).send({error:"basket is clear"});
+            res.status(400).send({error:"basket is clear"})
+            return;
         }
         res.locals.basket=basket;
         next();
     }
 
-    public static async addToBasket(req:Request, res:Response, next: NextFunction){
+    public static async addToBasket(req:Request, res:Response, next: NextFunction): Promise<void>{
         const sessionId = req.cookies.sessionId;
 
         const user = UsersService.getBySessionId(sessionId);
         if(!user){
-            return res.status(400).send({error:"user not verificate"});
+            res.status(400).send({error:"user not verificate"});
+            return;
         }
 
         const product = req.body.productId;
         if(!product){
-            return res.status(400).send("product not found");
+            res.status(400).send("product not found");
+            return;
         }
         
         const basket = await BasketService.AddToBasket(user.id, product)
