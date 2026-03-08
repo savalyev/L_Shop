@@ -24,7 +24,7 @@ function getDataProduct(): Product[] {
 
 export class BasketDB {
 
-    public static GetBasketUserId(userId: number) {
+    public static GetBasketUserId(userId: number):Basket|undefined {
 
         const allbasket: Basket[] = getData();
 
@@ -33,10 +33,10 @@ export class BasketDB {
         return userbasket;
     }
 
-    private static CreatBasket(userId: number) {
+    private static CreatBasket(userId: number): Basket {
         const allbasket: Basket[] = getData();
 
-        let maxId = allbasket.length + 1;
+        let maxId:number = allbasket.length + 1;
 
         const userBasket: Basket = {
             id: maxId,
@@ -51,16 +51,16 @@ export class BasketDB {
     }
 
 
-    public static async AddtoBasket(userId: number, productId: number) {
+    public static async AddtoBasket(userId: number, productId: number):Promise<Basket> {
 
-        let userbasket = this.GetBasketUserId(userId);
+        let userbasket:Basket | undefined = this.GetBasketUserId(userId);
 
         if (!userbasket) {
             userbasket = this.CreatBasket(userId);
         }
 
         const allproduct: Product[] = getDataProduct();
-        let product = allproduct.find(product => product.id === productId);
+        let product:Product | undefined = allproduct.find(product => product.id === productId);
 
         if (!product) {
             throw new Error("Product not found");
