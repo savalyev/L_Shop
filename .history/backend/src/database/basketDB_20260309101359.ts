@@ -66,7 +66,7 @@ export class BasketDB {
             throw new Error("Product not found");
         }
 
-        const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
+        const existproduct = userbasket.basket.find(prod => prod.products?.id === product.id);
 
         if (existproduct) {
             existproduct.count += 1;
@@ -75,7 +75,7 @@ export class BasketDB {
 
             const BasketProduct = {
                 count: 1,
-                productId: product.id
+                products: product
             }
 
             userbasket.basket.push(BasketProduct);
