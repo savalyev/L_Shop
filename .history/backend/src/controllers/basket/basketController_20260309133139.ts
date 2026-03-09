@@ -43,7 +43,7 @@ export class BasketController {
             return userbasket;
         }
         catch(err){
-            res.status(404).send({error: "Ошибка корзины"});
+            res.status(404).send({error: "Ошибка корзиные"});
         }
     }
 

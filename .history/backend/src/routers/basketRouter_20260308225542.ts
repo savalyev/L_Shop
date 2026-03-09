@@ -10,8 +10,6 @@ basketRouter.get('/mybasket',MiddleBasket.validateBasket, (req: Request, res: Re
 
 basketRouter.get('/:userId',BasketController.GetBasket);
 
-basketRouter.post('/',BasketController.AddToBasket);
-
 basketRouter.post('/add-to-basket',MiddleBasket.addToBasket,(req:Request, res:Response)=>{
     res.json(res.locals.basket);
 });

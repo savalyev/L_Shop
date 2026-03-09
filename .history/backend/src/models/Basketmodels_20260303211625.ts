@@ -8,5 +8,5 @@ export interface Basket{
 
 interface BasketProducts{
     count: number;
-    productId: number;
+    products: Product;
 }

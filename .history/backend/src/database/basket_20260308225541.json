@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "userId": 3,
+    "basket": []
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "basket": [
+      {
+        "count": 3,
+        "products": {
+          "id": 2,
+          "title": "Мандарины Абхазские, 1 кг",
+          "price": 5.49,
+          "isAvailable": true,
+          "description": "Сладкие и мягкие мандарины из солнечной Абхазии, почти без косточек.",
+          "categories": [
+            "Фрукты",
+            "Цитрусовые"
+          ],
+          "images": {
+            "preview": "https://i.ytimg.com/vi/mnOmemt74CY/maxresdefault.jpg"
+          },
+          "delivery": {
+            "startTown": {
+              "country": "Belarus",
+              "town": "Grodno"
+            },
+            "earlyDate": "2026-03-06T00:00:00Z",
+            "price": 3
+          },
+          "discount": 0
+        }
+      },
+      {
+        "count": 1,
+        "products": {
+          "id": 3,
+          "title": "Мандарины Клементины, 1 кг",
+          "price": 6.19,
+          "isAvailable": true,
+          "description": "Маленькие, но очень ароматные клементины — гибрид мандарина и апельсина, идеально подходят для детей.",
+          "categories": [
+            "Фрукты",
+            "Цитрусовые",
+            "Экзотические"
+          ],
+          "images": {
+            "preview": "https://media.vprok.ru/products/x1400/q4/ar/aipvuqwiqqv2revnldfdftbgdqbharq4.jpeg"
+          },
+          "delivery": {
+            "startTown": {
+              "country": "Belarus",
+              "town": "Minsk"
+            },
+            "earlyDate": "2026-03-04T00:00:00Z",
+            "price": 4
+          },
+          "discount": 10
+        }
+      }
+    ]
+  }
+]
