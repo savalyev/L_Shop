@@ -60,16 +60,19 @@ export class BasketDB {
         }
 
         const allproduct: Product[] = getDataProduct();
-        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        console.log(allproduct);
 
+        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        console.log(product);
         if (!product) {
             throw new Error("Product not found");
         }
-
+        console.log("hui2");
         const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
-
+        
         if (existproduct) {
             existproduct.count += 1;
+            console.log("product added +1");
         }
         else {
 
@@ -79,6 +82,7 @@ export class BasketDB {
             }
 
             userbasket.basket.push(BasketProduct);
+            console.log("product added to basket");
         }
 
         const allbasket: Basket[] = getData();
