@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "userId": 2,
+    "basket": [
+      {
+        "count": 2,
+        "productId": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "userId": "1",
+    "basket": [
+      {
+        "count": 6,
+        "productId": 2
+      }
+    ]
+  }
+]
