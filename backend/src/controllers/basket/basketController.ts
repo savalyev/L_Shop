@@ -37,9 +37,9 @@ export class BasketController {
                 res.status(400).send({ error: "Товар не найден" });
                 return;
             }
-            console.log("хуй");
+          
             const userbasket = await BasketService.AddToBasket(userId, productId);
-            console.log(userbasket);
+         
             res.status(200).send({ userbasket });
         }
         catch (err) {

@@ -51,7 +51,7 @@ export class BasketDB {
     }
 
 
-    public static async AddtoBasket(userId: number, productId: number):Promise<Basket> {
+    public static AddtoBasket(userId: number, productId: number):Basket {
 
         let userbasket:Basket | undefined = this.GetBasketUserId(userId);
 
@@ -60,19 +60,17 @@ export class BasketDB {
         }
 
         const allproduct: Product[] = getDataProduct();
-        console.log(allproduct);
+
 
         let product:Product | undefined = allproduct.find(product => product.id === productId);
-        console.log(product);
+        
         if (!product) {
             throw new Error("Product not found");
         }
-        console.log("hui2");
         const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
         
         if (existproduct) {
             existproduct.count += 1;
-            console.log("product added +1");
         }
         else {
 
@@ -82,7 +80,6 @@ export class BasketDB {
             }
 
             userbasket.basket.push(BasketProduct);
-            console.log("product added to basket");
         }
 
         const allbasket: Basket[] = getData();
@@ -98,5 +95,70 @@ export class BasketDB {
         fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
 
         return userbasket;
+    }
+
+    public static RemoveAllBasket(userId: number, productId: number): Basket{
+        let userbasket: Basket | undefined = this.GetBasketUserId(userId);
+
+        if(!userbasket){
+            throw new Error("Basket not found");
+        }
+
+        userbasket.basket.length=0;
+        return userbasket;
+    }
+
+    public static RemoveProductBasket(userId: number, productId: number): Basket{
+        let userbasket: Basket | undefined = this.GetBasketUserId(userId);
+
+        if(!userbasket){
+            throw new Error("Basket not found");
+        }
+
+        const allproduct = getDataProduct();
+
+        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        
+        if (!product) {
+            throw new Error("Product not found");
+        }
+        const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
+        
+        if(!existproduct){
+            throw new Error("product not found");
+        }
+        else{
+            userbasket.basket = userbasket.basket.filter(i=>i.productId != productId);
+        }
+        return userbasket;
+    }
+
+    public static RemoveFromBasket(userId: number, productId: number): Basket {
+        let userbasket: Basket | undefined = this.GetBasketUserId(userId);
+
+        if(!userbasket){
+            throw new Error("Basket not found");
+        }
+
+        const allproduct = getDataProduct();
+
+        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        
+        if (!product) {
+            throw new Error("Product not found");
+        }
+        const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
+        
+        if(!existproduct){
+            throw new Error("product not found");
+        }
+        if (existproduct.count>1) {
+            existproduct.count -= 1;
+        }
+        else{
+            userbasket = this.RemoveProductBasket(userId, productId);
+        }
+
+        return userbasket
     }
 }
