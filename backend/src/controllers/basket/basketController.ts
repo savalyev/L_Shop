@@ -39,12 +39,86 @@ export class BasketController {
             }
           
             const userbasket = await BasketService.AddToBasket(userId, productId);
-         
+        
             res.status(200).send({ userbasket });
         }
         catch (err) {
             res.status(404).send({ error: err });
         }
+    }
+
+    public static RemoveFromBasket(req: Request, res: Response): void{
+        try{
+            const userId = Number(req.body.userId);
+
+            if(!userId){
+                res.status(400).send({error:"user not found"});
+                return;
+            }
+
+            const productId = Number(req.body.productId);
+
+            if(!productId){
+                res.status(400).send({error:"product not found"});
+            }
+
+            const userbasket = BasketService.RemoveFromBasket(userId,productId);
+
+            res.status(200).send(userbasket);
+        }
+        catch(err){
+            res.status(404).send({error:err});
+        }
+    }
+
+        public static RemoveProductFromBasket(req: Request, res: Response): void{
+        try{
+            const userId = Number(req.body.userId);
+
+            if(!userId){
+                res.status(400).send({error:"user not found"});
+                return;
+            }
+
+            const productId = Number(req.body.productId);
+
+            if(!productId){
+                res.status(400).send({error:"product not found"});
+            }
+
+            const userbasket = BasketService.RemoveProductFromBasket(userId,productId);
+
+            res.status(200).send(userbasket);
+        }
+        catch(err){
+            res.status(404).send({error:err});
+        }
+
+    }
+
+        public static RemoveAllBasket(req: Request, res: Response): void{
+        try{
+            const userId = Number(req.body.userId);
+
+            if(!userId){
+                res.status(400).send({error:"user not found"});
+                return;
+            }
+
+            const productId = Number(req.body.productId);
+
+            if(!productId){
+                res.status(400).send({error:"product not found"});
+            }
+
+            const userbasket = BasketService.RemoveAllBasket(userId);
+
+            res.status(200).send(userbasket);
+        }
+        catch(err){
+            res.status(404).send({error:err});
+        }
+
     }
 
 }

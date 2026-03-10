@@ -126,7 +126,7 @@ dist
 .vscode-test
 
 # Local history
-.history/
+.history
 
 # yarn v3
 .pnp.*
