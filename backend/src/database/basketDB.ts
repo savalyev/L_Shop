@@ -97,7 +97,7 @@ export class BasketDB {
         return userbasket;
     }
 
-    public static RemoveAllBasket(userId: number, productId: number): Basket{
+    public static RemoveAllBasket(userId: number): Basket{
         let userbasket: Basket | undefined = this.GetBasketUserId(userId);
 
         if(!userbasket){
@@ -105,6 +105,19 @@ export class BasketDB {
         }
 
         userbasket.basket.length=0;
+
+        const allbasket: Basket[] = getData();
+        const index = allbasket.findIndex(basket => String(basket.userId) === String(userId));
+
+        if (index !== -1) {
+            allbasket[index] = userbasket;
+        }
+        else {
+            allbasket.push(userbasket);
+        }
+
+        fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
+
         return userbasket;
     }
 
@@ -130,6 +143,19 @@ export class BasketDB {
         else{
             userbasket.basket = userbasket.basket.filter(i=>i.productId != productId);
         }
+
+        const allbasket: Basket[] = getData();
+        const index = allbasket.findIndex(basket => String(basket.userId) === String(userId));
+
+        if (index !== -1) {
+            allbasket[index] = userbasket;
+        }
+        else {
+            allbasket.push(userbasket);
+        }
+
+        fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
+
         return userbasket;
     }
 
@@ -142,23 +168,35 @@ export class BasketDB {
 
         const allproduct = getDataProduct();
 
-        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        let product:Product | undefined = allproduct.find(product => Number(product.id) === Number(productId));
         
         if (!product) {
             throw new Error("Product not found");
         }
-        const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
-        
+        const existproduct = userbasket.basket.find(prod => Number(prod.productId) === Number(product.id));
+     
         if(!existproduct){
             throw new Error("product not found");
         }
-        if (existproduct.count>1) {
+        else if (existproduct.count>1) {
             existproduct.count -= 1;
         }
         else{
             userbasket = this.RemoveProductBasket(userId, productId);
         }
 
+        const allbasket: Basket[] = getData();
+        const index = allbasket.findIndex(basket => String(basket.userId) === String(userId));
+
+        if (index !== -1) {
+            allbasket[index] = userbasket;
+        }
+        else {
+            allbasket.push(userbasket);
+        }
+
+        fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
+        
         return userbasket
     }
 }

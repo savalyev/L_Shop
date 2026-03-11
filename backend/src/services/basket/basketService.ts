@@ -14,8 +14,8 @@ export class BasketService{
         return BasketDB.RemoveFromBasket(userId,productId);
     }
 
-    public static RemoveAllBasket(userId: number, productId: number): Basket{
-        return BasketDB.RemoveAllBasket(userId,productId);
+    public static RemoveAllBasket(userId: number): Basket{
+        return BasketDB.RemoveAllBasket(userId);
     }
 
     public static RemoveProductFromBasket(userId: number, productId: number): Basket{
