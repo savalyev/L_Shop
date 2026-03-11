@@ -36,4 +36,6 @@ basketRouter.delete('/remove-product',MiddleBasket.RemoveProductFromBasket,(req:
 basketRouter.get('/:userId',BasketController.GetBasket);
 
 
+basketRouter.get('/:userId',BasketController.GetBasket);
+
 export { basketRouter };
