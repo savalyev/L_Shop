@@ -37,7 +37,7 @@ npm run dev
 | `GET` | `/api/products/by-description?description=` | Поиск по описанию |
 | `GET` | `/api/products/ascending` | Все товары, цена ↑ |
 | `GET` | `/api/products/descending` | Все товары, цена ↓ |
-| `GET` | `/api/products/fillters?...` | Товары с фильтрами |
+| `GET` | `/api/products/fillters?...` | Товары с фильтрами (category, isAvailable, minPrice, maxPrice) ЧЕРЕЗ QUERY |
 | `POST` | `/api/products` | Создать товар |
 | `POST` | `/api/products/for-basket` | Получение товаров по массиву ID
 
@@ -136,7 +136,10 @@ npm run dev
 |-------|------|----------|
 | `GET` | `/api/basket/mybasket` | Получение корзины пользователя по Cookies |
 | `GET` | `/api/basket/:userId` | Получение корзины пользователя по UserID |
-| `POST` | `/api/basket/add-to-basket` | Добавление товара в корзину по Cookies | 
+| `POST` | `/api/basket/add-to-basket` | Добавление товара в корзину по Cookies (+1) | 
+| `PACTH` | `/api/basket/remove-count` | Удаление товара из корзины по Cookies (-1) |
+| `DELETE` | `/api/basket//remove-all'` | Удаление всей корзины по Cookies |
+
 
 #### POST `/api/basket/add-to-basket` — тело запроса
 
