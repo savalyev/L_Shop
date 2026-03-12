@@ -2,7 +2,8 @@ import express, { Application, Request, Response } from 'express';
 import { productsRouter } from './routers/productsRouter';
 import { userRouter } from './routers/usersRouter';
 import { authRouter } from './routers/authRouter';
-import { basketRouter } from './routers/basketRouter'
+import { basketRouter } from './routers/basketRouter';
+import { delivaryRouter } from './routers/delivaryRouter';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
@@ -21,6 +22,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/basket', basketRouter);
+app.use('/api/delivery', delivaryRouter);
 
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);

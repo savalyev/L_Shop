@@ -9,7 +9,7 @@ export interface User {
     sessionId?: string;
 }
 
-type Address = {
+export type Address = {
     country?: string;
     town?: string;
     street?: string;
@@ -37,8 +37,8 @@ export interface Product{
 }
 
 export interface Delivery{
-    id: number;
-    endAdress: Address;
+    id: number,
+    endadress: Address;
     endDate: Date;
     basket:Basket;
     cost: number;
