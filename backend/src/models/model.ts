@@ -1,3 +1,5 @@
+import { Basket } from '../models/Basketmodels';
+
 export interface User {
     id: number;
     name: string;
@@ -32,6 +34,14 @@ export interface Product{
     };
     discount: number;
 
+}
+
+export interface Delivery{
+    id: number;
+    endAdress: Address;
+    endDate: Date;
+    basket:Basket;
+    cost: number;
 }
 
 export type ProductCreateBody = Omit<Product, 'id'>;
