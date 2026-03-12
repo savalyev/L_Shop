@@ -14,6 +14,15 @@ npm run dev
 
 Сервер: `http://localhost:3000`
 
+## Запуск фронта
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Доступ: http://localhost:5173
+
 ---
 
 ## API Reference
