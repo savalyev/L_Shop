@@ -39,7 +39,7 @@ export class DeliveryController {
             const delId = req.body.deliveryId;
 
             if (!delId) {
-                res.status(400).send({ error: "delivaryId is required" });
+                res.status(400).send({ error: "deliveryId is required" });
                 return;
             }
 
