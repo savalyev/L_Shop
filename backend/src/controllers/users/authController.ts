@@ -3,6 +3,11 @@ import { AuthService } from "../../services/users/authService";
 import { generateSessionId } from "../../services/users/authService";
 import { UsersService } from "../../services/users/usersService";
 import { error } from "node:console";
+import * as fs from 'fs';
+import * as path from 'path';
+import { Delivery } from "../../models/model";
+
+const delfilepath = path.resolve(__dirname,'../../database/delivery.json');
 
 export class authController {
     static register(req: Request, res: Response): void {
@@ -75,6 +80,16 @@ export class authController {
                 maxAge: 10 * 60 * 1000,
                 sameSite: 'lax',
             });
+
+            const file = fs.readFileSync(delfilepath,'utf-8');
+
+            const alldelivery: Delivery[] = JSON.parse(file);
+
+            let newdel: Delivery[];
+            const Datenow = new Date();
+
+            newdel = alldelivery.filter(d => Datenow < new Date(d.endDate));
+            fs.writeFileSync(delfilepath,JSON.stringify(newdel,null,2));
 
             res.status(201).json({ data: user });
 
