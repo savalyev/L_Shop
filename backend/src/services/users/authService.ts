@@ -1,12 +1,11 @@
 import * as bcrypt from 'bcryptjs'; 
 import crypto from 'crypto';
-import * as jwt from 'jsonwebtoken';
 
 import { UsersService } from "./usersService";
 import { User, UserCreateBody } from "../../models/model";
 import { UserDb } from '../../database/usersDB';
 
-export class UserExistsError extends Error {
+export class AuthError extends Error {
   constructor(message = 'User already exists') {
     super(message);
     this.name = message ;
@@ -26,7 +25,7 @@ export class AuthService{
          const user = UsersService.getByName(item.name);
 
          if(user){
-            throw new UserExistsError();
+            throw new AuthError();
          }
 
          const passwordHash = hashPasswordSync(item.password);
@@ -46,7 +45,7 @@ export class AuthService{
           if(!user){
             user = UsersService.getByPhone(item.name);
             if(!user){
-              throw new UserExistsError("Пользователь не найден");
+              throw new AuthError("Пользователь не найден");
             }
           }
         }
@@ -54,7 +53,7 @@ export class AuthService{
         const isValid = bcrypt.compareSync(item.password, user.password);
 
         if(!isValid){
-          throw new UserExistsError("Пароль не верный!");
+          throw new AuthError("Пароль не верный!");
         }
 
         return user;

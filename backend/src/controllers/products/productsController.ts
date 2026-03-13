@@ -1,7 +1,6 @@
 import { ProductsService } from "../../services/products/productsService";
 import { Request, Response } from "express";
 import { Product } from "../../models/model";
-import { error } from "node:console";
 
 type ProductCreateBody = Omit<Product, 'id'>;
 

@@ -2,14 +2,11 @@ import { Request, Response } from "express";
 import { AuthService } from "../../services/users/authService";
 import { generateSessionId } from "../../services/users/authService";
 import { UsersService } from "../../services/users/usersService";
-import { error } from "node:console";
-import * as fs from 'fs';
-import * as path from 'path';
-import { Delivery } from "../../models/model";
+import { DeliveryDB } from "../../database/deliveryDB";
 
-const delfilepath = path.resolve(__dirname,'../../database/delivery.json');
 
-export class authController {
+
+export class AuthController {
     static register(req: Request, res: Response): void {
         try {
             const { name, email, phone, password } = req.body;
@@ -39,12 +36,15 @@ export class authController {
                 httpOnly: true,
                 maxAge: 10 * 60 * 1000,
                 sameSite: 'lax',
+                secure: true
             });
 
-            res.status(201).json({ data: user });
+            const { password: _password, sessionId: _sessionId, ...safeUser } = user;
+
+            res.status(201).json({ data: safeUser });
 
         } catch (err) {
-            res.status(400).json({ error: "Пользователь не найден" });
+            res.status(400).json({ error: "Такой пользователь уже существует" });
             return;
         }
     }
@@ -67,8 +67,8 @@ export class authController {
                 password: password
             });
 
-            if(!user){
-                res.status(400).json({error: "Пользователь не найден"});
+            if (!user) {
+                res.status(400).json({ error: "Пользователь не найден" });
                 return;
             }
 
@@ -79,19 +79,14 @@ export class authController {
                 httpOnly: true,
                 maxAge: 10 * 60 * 1000,
                 sameSite: 'lax',
+                secure: true
             });
 
-            const file = fs.readFileSync(delfilepath,'utf-8');
+            DeliveryDB.updateDelivery();
 
-            const alldelivery: Delivery[] = JSON.parse(file);
+            const { password: _password, sessionId: _sessionId, ...safeUser } = user;
 
-            let newdel: Delivery[];
-            const Datenow = new Date();
-
-            newdel = alldelivery.filter(d => Datenow < new Date(d.endDate));
-            fs.writeFileSync(delfilepath,JSON.stringify(newdel,null,2));
-
-            res.status(201).json({ data: user });
+            res.status(200).json({ data: safeUser });
 
         } catch (err) {
             res.status(400).json({ error: err });
@@ -102,8 +97,8 @@ export class authController {
     static logout(req: Request, res: Response): void {
         const sessionId = req.cookies.sessionId;
 
-        if(typeof sessionId !== 'string' || !sessionId){
-            res.status(400).json({error: "Invalid session"});
+        if (typeof sessionId !== 'string' || !sessionId) {
+            res.status(400).json({ error: "Invalid session" });
             return;
         }
 
