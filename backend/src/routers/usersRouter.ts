@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { UsersController } from "../controllers/users/usersController";
-import { validateUserCreate } from "../middlewares/userMiddleware";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { Request, Response } from "express";
 
@@ -19,8 +18,5 @@ userRouter.get("/me", authMiddleware, (req: Request, res: Response) => {
 
 //GET запрос, получение пользователя по ID
 userRouter.get("/:id", UsersController.getById);
-
-//POST запрос, создание пользователя
-userRouter.post("/", validateUserCreate, UsersController.create);
 
 export {userRouter};

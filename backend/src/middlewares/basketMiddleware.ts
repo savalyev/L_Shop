@@ -9,7 +9,7 @@ export class MiddleBasket{
 
         const user = UsersService.getBySessionId(sessionId);
         if(!user){
-            res.status(400).send({error:"user not verificate"});
+            res.status(401).send({error:"user not verificate"});
             return;
         }
         const basket = BasketService.GetBasketUserId(user.id);

@@ -1,7 +1,6 @@
-import { Basket } from '../models/Basketmodels';
 import { BasketDB } from '../database/basketDB';
 import { ProductDb } from '../database/productsDB';
-import { Product, Delivery, Address } from '../models/model';
+import { Delivery, Address } from '../models/model';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -9,38 +8,38 @@ const filepathDelivery = path.resolve(__dirname, 'delivery.json');
 
 export class DeliveryDB {
 
-    private static GetALL(): Delivery[] {
+    private static getAll(): Delivery[] {
 
         const file = fs.readFileSync(filepathDelivery, 'utf-8');
 
-        const allDelivary: Delivery[] | undefined = JSON.parse(file);
+        const allDelivery: Delivery[] | undefined = JSON.parse(file);
 
-        if(!allDelivary){
+        if (!allDelivery) {
             throw new Error("Error in delivert file");
         }
 
-        return allDelivary;
+        return allDelivery;
     }
 
-    public static GetDelivByUserId(userId: number): Delivery[]{
-        const alldelivary = this.GetALL();
+    public static getDelivByUserId(userId: number): Delivery[] {
+        const alldelivery = this.getAll();
 
-        const userdeliveres = alldelivary.filter(d => d.basket.userId === userId);
+        const userdeliveres = alldelivery.filter(d => d.basket.userId === userId);
 
-        if(!userdeliveres){
+        if (!userdeliveres) {
             throw new Error("user haven`t delivereses");
         }
 
         return userdeliveres;
     }
 
-    public static CreateDelivety(userId: number, endAdress: Address): Delivery {
+    public static createDelivery(userId: number, endAdress: Address): Delivery {
         const userbasket = BasketDB.GetBasketUserId(userId);
 
         if (!userbasket) {
             throw new Error("Basket not found");
         }
-        if(userbasket.basket.length === 0){
+        if (userbasket.basket.length === 0) {
             throw new Error("Basket is clear");
         }
 
@@ -74,13 +73,10 @@ export class DeliveryDB {
             }
         }
 
-        const alldelivery = this.GetALL();
+        const alldelivery = this.getAll();
 
         let maxId: number;
         maxId = alldelivery.length + 1;
-
- 
-
 
         const now = new Date();
         now.setDate(now.getDate() + days);
@@ -97,30 +93,39 @@ export class DeliveryDB {
 
         alldelivery.push(Delivery);
 
-
         fs.writeFileSync(filepathDelivery, JSON.stringify(alldelivery, null, 2));
 
         return Delivery;
     }
 
-    public static RemoveDelivary(delId: number): Delivery[] {
-        const allDelivary = this.GetALL();
+    public static removeDelivery(delId: number): Delivery[] {
+        const allDelivery = this.getAll();
 
-        const delivary = allDelivary.filter(d => d.id !== delId);
+        const delivery = allDelivery.filter(d => d.id !== delId);
 
-
-
-        if (!delivary) {
-            throw new Error("delivaty obj not found");
+        if (!delivery) {
+            throw new Error("delivery obj not found");
         }
 
-        if (allDelivary.length === delivary.length) {
-            throw new Error("obj delivary wasnt del");
+        if (allDelivery.length === delivery.length) {
+            throw new Error("obj delivery wasnt del");
         }
 
-        fs.writeFileSync(filepathDelivery, JSON.stringify(delivary, null, 2));
+        fs.writeFileSync(filepathDelivery, JSON.stringify(delivery, null, 2));
 
-        return delivary;
+        return delivery;
+    }
+
+    public static updateDelivery() {
+        const file = fs.readFileSync(filepathDelivery, 'utf-8');
+
+        const alldelivery: Delivery[] = JSON.parse(file);
+
+        let newdel: Delivery[];
+        const Datenow = new Date();
+
+        newdel = alldelivery.filter(d => Datenow < new Date(d.endDate));
+        fs.writeFileSync(filepathDelivery, JSON.stringify(newdel, null, 2));
     }
 
 }

@@ -1,33 +1,32 @@
 import { Request, Response } from "express";
 import { UsersService } from "../../services/users/usersService";
-import { User } from "../../models/model";
-import { error } from "node:console";
+import { UserCreateBody } from "../../models/model";
 
-type UserCreateBody = Omit<User, 'id'>;
 
-export class UsersController{
-    static getAll(req: Request, res: Response): void{
+export class UsersController {
+
+    static getAll(req: Request, res: Response): void {
         const data = UsersService.getAll();
-        res.send({data});
+        res.send({ data });
     }
 
     static getById(req: Request, res: Response): void {
         const idParam = req.params.id;
         const id = Number(idParam);
 
-        if(Number.isNaN(id)){
-            res.status(400).send({error: "Invalid id"});
+        if (Number.isNaN(id)) {
+            res.status(400).send({ error: "Invalid id" });
             return;
         }
 
         const item = UsersService.getById(id);
 
-        if(!item){
-            res.status(400).send({error: "Not found"});
+        if (!item) {
+            res.status(404).send({ error: "Not found" });
             return;
         }
 
-        res.send({data: item});
+        res.send({ data: item });
     }
 
     static getByName(req: Request, res: Response): void {
@@ -46,12 +45,5 @@ export class UsersController{
         }
 
         res.json({ data: user });
-    }
-
-    static create(req: Request<{}, any, Partial<UserCreateBody>>, res: Response): void {
-        const body = req.body as UserCreateBody;
-
-        const newItem = UsersService.create(body);
-        res.status(200).json({data: newItem});
     }
 }
