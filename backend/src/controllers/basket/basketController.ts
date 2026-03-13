@@ -18,7 +18,7 @@ export class BasketController {
             res.status(200).send(userbasket);
         }
         catch (err) {
-            res.status(500).send({ error: "Ошибка корзины" })
+            res.status(500).send({ error: 'Internal server error' });
         }
     }
 
@@ -30,7 +30,7 @@ export class BasketController {
             const productId = Number(req.body.productId);
 
             if (!productId) {
-                res.status(404).send({ error: "Товар не найден" });
+                res.status(400).send({ error: "Товар не найден" });
                 return;
             }
 
@@ -39,7 +39,7 @@ export class BasketController {
             res.status(201).send({ userbasket });
         }
         catch (err) {
-            res.status(500).send({ error: err });
+            res.status(500).send({ error: 'Internal server error' });
         }
     }
 
@@ -51,7 +51,8 @@ export class BasketController {
             const productId = Number(req.body.productId);
 
             if (!productId) {
-                res.status(404).send({ error: "product not found" });
+                res.status(400).send({ error: "product not found" });
+                return;
             }
 
             const userbasket = BasketService.RemoveFromBasket(Number(user?.id), productId);
@@ -59,7 +60,7 @@ export class BasketController {
             res.status(200).send(userbasket);
         }
         catch (err) {
-            res.status(500).send({ error: err });
+            res.status(500).send({ error: 'Internal server error' });
         }
     }
 
@@ -71,7 +72,8 @@ export class BasketController {
             const productId = Number(req.body.productId);
 
             if (!productId) {
-                res.status(404).send({ error: "product not found" });
+                res.status(400).send({ error: "product not found" });
+                return;
             }
 
             const userbasket = BasketService.RemoveProductFromBasket(Number(user?.id), productId);
@@ -79,7 +81,7 @@ export class BasketController {
             res.status(200).send(userbasket);
         }
         catch (err) {
-            res.status(500).send({ error: err });
+            res.status(500).send({ error: 'Internal server error' });
         }
 
     }
@@ -92,7 +94,8 @@ export class BasketController {
             const productId = Number(req.body.productId);
 
             if (!productId) {
-                res.status(404).send({ error: "product not found" });
+                res.status(400).send({ error: "product not found" });
+                return;
             }
 
             const userbasket = BasketService.RemoveAllBasket(Number(user?.id));
@@ -100,7 +103,7 @@ export class BasketController {
             res.status(200).send(userbasket);
         }
         catch (err) {
-            res.status(500).send({ error: err });
+            res.status(500).send({ error: 'Internal server error' });
         }
 
     }
