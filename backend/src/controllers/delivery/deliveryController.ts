@@ -8,14 +8,14 @@ export class DeliveryController {
             const userId = req.body.userId;
 
             if (!userId) {
-                res.status(404).send({ error: "user not found" });
+                res.status(400).send({ error: "userId is required" });
                 return;
             }
 
             const address = req.body.Address;
 
             if (!address) {
-                res.status(404).send({ error: "addres not found" });
+                res.status(400).send({ error: "address is required" });
                 return;
             }
 
@@ -32,14 +32,14 @@ export class DeliveryController {
             const userId = req.body.userId;
 
             if (!userId) {
-                res.status(404).send({ error: "user not found" });
+                res.status(400).send({ error: "userId is required" });
                 return;
             }
 
             const delId = req.body.deliveryId;
 
             if (!delId) {
-                res.status(404).send({ error: "deliv not found" });
+                res.status(400).send({ error: "delivaryId is required" });
                 return;
             }
 
@@ -58,7 +58,7 @@ export class DeliveryController {
             const userId = req.body.userId;
 
             if (!userId) {
-                res.status(404).send({ error: "user not found" });
+                res.status(400).send({ error: "userId is required" });
                 return;
             }
 

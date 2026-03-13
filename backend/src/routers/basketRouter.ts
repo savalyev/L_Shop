@@ -1,38 +1,24 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { BasketController } from '../controllers/basket/basketController';
-import { MiddleBasket } from '../middlewares/basketMiddleware';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 const basketRouter = Router();
 
-basketRouter.patch('/remove', BasketController.RemoveFromBasket);
+// леха, исправь эту хуйню пожалуйста
 
-basketRouter.delete('/remove-prod', BasketController.RemoveProductFromBasket);
+//GET запрос, получение корзины пользователя по Cookies
+basketRouter.get('/mybasket', authMiddleware, BasketController.getBasket);
 
-basketRouter.delete('/clear-basket', BasketController.RemoveAllBasket);
+//POST запрос, добавление товара из корзины по Cookies (+1)
+basketRouter.post('/add-to-basket', authMiddleware, BasketController.addToBasket);
 
-basketRouter.post('/', BasketController.AddToBasket);
+//PATCH запрос, удаление товара из корзины по Cookies (-1)
+basketRouter.patch('/remove-count', authMiddleware, BasketController.removeFromBasket);
 
-basketRouter.get('/mybasket', MiddleBasket.validateBasket, (req: Request, res: Response) => {
-    res.json(res.locals.basket);
-});
+//DELETE запрос, удаление всей корзины по Cookies
+basketRouter.delete('/remove-all', authMiddleware, BasketController.removeAllBasket);
 
-basketRouter.post('/add-to-basket', MiddleBasket.addToBasket, (req: Request, res: Response) => {
-    res.json(res.locals.basket);
-});
-
-basketRouter.patch('/remove-count', MiddleBasket.RemoveFromBasket, (req: Request, res: Response) => {
-    res.json(res.locals.basket);
-});
-
-basketRouter.delete('/remove-all', MiddleBasket.RemoveAllBasket, (req: Request, res: Response) => {
-    res.json(res.locals.basket);
-});
-
-basketRouter.delete('/remove-product', MiddleBasket.RemoveProductFromBasket, (req: Request, res: Response) => {
-    res.json(res.locals.basket);
-});
-
-basketRouter.get('/:userId', BasketController.GetBasket);
-
+//DELETE запрос, удаление всей строчки товара из корзины 
+basketRouter.delete('/remove-product', authMiddleware, BasketController.removeProduct);
 
 export { basketRouter };

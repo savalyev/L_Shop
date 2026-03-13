@@ -3,6 +3,7 @@ import { AuthService } from "../../services/users/authService";
 import { generateSessionId } from "../../services/users/authService";
 import { UsersService } from "../../services/users/usersService";
 import { DeliveryDB } from "../../database/deliveryDB";
+import { AuthError } from "../../services/users/authService";
 
 
 
@@ -44,8 +45,13 @@ export class AuthController {
             res.status(201).json({ data: safeUser });
 
         } catch (err) {
-            res.status(400).json({ error: "Такой пользователь уже существует" });
-            return;
+            if (err instanceof AuthError) {
+                res.status(401).json({ error: err.message });
+            } else {
+                console.error(err);
+                res.status(500).json({ error: 'Internal server error' });
+                return;
+            }
         }
     }
 
@@ -67,10 +73,6 @@ export class AuthController {
                 password: password
             });
 
-            if (!user) {
-                res.status(400).json({ error: "Пользователь не найден" });
-                return;
-            }
 
             const sessionId = generateSessionId();
             UsersService.updateSession(user.id, sessionId);
@@ -89,7 +91,11 @@ export class AuthController {
             res.status(200).json({ data: safeUser });
 
         } catch (err) {
-            res.status(400).json({ error: err });
+            if (err instanceof AuthError) {
+                res.status(401).json({ error: err.message });
+            } else {
+                res.status(500).json({ error: 'Internal server error' });
+            }
             return;
         }
     }
