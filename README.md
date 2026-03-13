@@ -1,6 +1,6 @@
 # L_Shop
 
-Интернет-магазин.
+Интернет-магазин | Инфа для фронта 
 
 ---
 
@@ -135,17 +135,17 @@ npm run dev
 | Метод | Путь | Описание |
 |-------|------|----------|
 | `GET` | `/api/basket/mybasket` | Получение корзины пользователя по Cookies |
-| `GET` | `/api/basket/:userId` | Получение корзины пользователя по UserID |
 | `POST` | `/api/basket/add-to-basket` | Добавление товара в корзину по Cookies (+1) | 
 | `PACTH` | `/api/basket/remove-count` | Удаление товара из корзины по Cookies (-1) |
-| `DELETE` | `/api/basket//remove-all'` | Удаление всей корзины по Cookies |
+| `DELETE` | `/api/basket/remove-all'` | Удаление всей корзины по Cookies |
+| `DELETE` | `/api/basket/remove-product` | Удаление всей строчки товара из корзины |
 
 
 #### POST `/api/basket/add-to-basket` — тело запроса
 
 ```json
 {
-  "productId": number
+  "productId": "number"
 }
 ```
 
