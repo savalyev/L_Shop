@@ -19,7 +19,7 @@
     "password": "$2b$10$o1Rtms416LANEfpY7wP.7.LXqUKeWC1A0dN7CZlCo/DYLyH2gDfku",
     "email": "kirill@example.com",
     "phone": "+375291234567",
-    "sessionId": ""
+    "sessionId": "b846772970b0fb9303c635012f4acded"
   },
   {
     "id": 4,
@@ -44,5 +44,21 @@
     "email": "duboviklev88@gmail.com",
     "phone": "+375295303223",
     "sessionId": "c79284cec71746212a91f3a8bf0cb3eb"
+  },
+  {
+    "id": 7,
+    "name": "Алексей Лиштван",
+    "password": "$2b$10$2THes1101nPSEg4gnxYMHuxQA9E5Wp2S03Jf1QMH7r7nyEfEoESWi",
+    "email": "aleksej.lishtvan@gmail.com",
+    "phone": "+37455555555",
+    "sessionId": "d8f11eb915b86f8f99d6910037f4a676"
+  },
+  {
+    "id": 8,
+    "name": "Алексей Лиштва",
+    "password": "$2b$10$QlXUYvoqg5kq.OPR08QDGu72fettSSOibjlZz1fDrb5V5vaRqiIKG",
+    "email": "aleksej.lishtva@gmail.com",
+    "phone": "+375444949495",
+    "sessionId": "c98b8517526292cb2c38377617f867c3"
   }
 ]

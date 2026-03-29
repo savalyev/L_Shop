@@ -1,113 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/css/style_main.css">
-    <title>REUTKUPI | Интернет-магазин</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L_Shop SPA</title>
+    
+    <!-- Подключаем все твои стили -->
+    <link rel="stylesheet" href="./src/CSS/style_authorization.css">
+    <link rel="stylesheet" href="./src/CSS/style_registration.css">
+    <link rel="stylesheet" href="./src/CSS/style_main.css">
 </head>
-
 <body>
+    <!-- Сюда будет подгружаться HTML из файлов -->
+    <div id="app"></div>
 
-    <!-- Top Header -->
-    <div class="top-header">
-        <div class="container">
-            <div class="location-info">
-                <span>📍</span>
-                <span class="location-text">Минск</span>
-            </div>
-            <div class="user-links">
-                <a href="#" onclick="changePage('orders'); return false;">
-                    <span>📋</span> Заказы
-                </a>
-                <a href="#" onclick="changePage('profile'); return false;">
-                    <span>👤</span> Личный кабинет
-                </a>
-                <a href="#" onclick="openCart(); return false;">
-                    <span>🛒</span> Корзина
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Header -->
-    <div class="main-header">
-        <div class="container">
-            <a href="#" class="logo" onclick="changePage('home'); return false;">REUTKUPI</a>
-            <button class="catalog-btn" onclick="scrollToCategories()">
-                <span>📱</span> Каталог
-            </button>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Поиск товаров..." onkeyup="handleSearchInput(event)">
-                <button onclick="searchProducts()">Найти</button>
-            </div>
-            <div class="header-icons">
-                <div class="header-icon" onclick="openCart()">
-                    <span>🛒</span>
-                    <span>Корзина</span>
-                    <span class="cart-count" id="cartCount">0</span>
-                </div>
-                <div class="auth-buttons">
-                    <button class="login-btn" id="loginButton" onclick="handleAuthClick()">
-                        <span>👤</span>
-                        <span id="authButtonText">Войти</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="container" id="mainContent">
-        <!-- Динамический контент будет загружаться сюда -->
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>REUTKUPI</h4>
-                    <a onclick="changePage('about'); return false;">О нас</a>
-                    <a onclick="changePage('jobs'); return false;">Вакансии</a>
-                    <a onclick="changePage('contacts'); return false;">Контакты</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Покупателям</h4>
-                    <a onclick="changePage('howtoorder'); return false;">Как сделать заказ</a>
-                    <a onclick="changePage('delivery'); return false;">Доставка</a>
-                    <a onclick="changePage('returns'); return false;">Возврат</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Партнерам</h4>
-                    <a onclick="changePage('sell'); return false;">Продавайте на REUTKUPI</a>
-                    <a onclick="changePage('advertise'); return false;">Рекламируйте товары</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Мы в соцсетях</h4>
-                    <a onclick="changePage('telegram'); return false;">Telegram</a>
-                    <a onclick="changePage('vk'); return false;">VK</a>
-                    <a onclick="changePage('youtube'); return false;">YouTube</a>
-                </div>
-            </div>
-            <div class="copyright">
-                © 2025 REUTKUPI — Интернет-магазин. Все цены указаны в BYN. Минск
-            </div>
-        </div>
-    </footer>
-
-    <!-- Cart Modal -->
-    <div id="cartModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCart()">&times;</span>
-            <h2>Корзина</h2>
-            <div id="cartItems"></div>
-            <div class="cart-total" id="cartTotal">Итого: 0 BYN</div>
-            <button class="checkout-btn" onclick="checkout()" id="checkoutBtn">Перейти к оформлению</button>
-        </div>
-    </div>
-    <script type="module" src="../src/ts/main.ts"></script>
+    <script type="module" src="./src/ts/main.ts"></script>
 </body>
-
 </html>
