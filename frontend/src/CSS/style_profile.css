@@ -1,0 +1,81 @@
+/* src/CSS/style_profile.css */
+.profile-page {
+    min-height: 80vh;
+    padding: 60px 20px;
+    background: #f4f5f7;
+    font-family: 'Inter', sans-serif;
+}
+
+.profile-card {
+    background: white;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    padding: 40px;
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: #f91155;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+
+.profile-name {
+    font-size: 26px;
+    color: #2b2b2b;
+    margin-bottom: 5px;
+}
+
+.profile-role {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.profile-info-grid {
+    display: grid;
+    gap: 15px;
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.info-item {
+    background: #fafafa;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-label { color: #777; font-size: 13px; font-weight: 500;}
+.info-value { color: #222; font-weight: 600; font-size: 15px;}
+
+.logout-btn {
+    background: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 15px;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logout-btn:hover {
+    background: #dc3545;
+    color: white;
+}

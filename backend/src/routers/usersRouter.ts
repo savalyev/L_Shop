@@ -13,7 +13,7 @@ userRouter.get("/by-name", UsersController.getByName);
 
 //GET запрос, получение пользователя по куки
 userRouter.get("/me", authMiddleware, (req: Request, res: Response) => {
-    res.json((req as any).user);
+    res.json(res.locals.user);
 });
 
 //GET запрос, получение пользователя по ID
