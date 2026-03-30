@@ -1,47 +1,55 @@
-// ИМПОРТИРУЕМ ПРАВИЛЬНЫЕ ФУНКЦИИ ИЗ КОМПОНЕНТОВ
+// src/ts/main.ts
 import { renderLogin } from './components/auth/loginComponent';
 import { renderRegistration } from './components/auth/registerComponent';
 import { renderHome } from './components/shop/homeComponent';
+import { renderProfile } from './components/user/profileComponent';
+// ИМПОРТИРУЕМ ДОСТАВКУ
+import { renderDelivery } from './components/shop/deliveryComponent';
+import { renderProduct } from './components/shop/productComponent';
 
 export class Router {
     static navigate(path: string) {
         const app = document.getElementById('app');
         if (!app) return;
 
-        // Меняем URL в браузере без перезагрузки страницы
         window.history.pushState({}, '', path);
-
-        // Очищаем текущий контент
         app.innerHTML = '';
 
-        // В зависимости от пути, вызываем нужный компонент
-        switch (path) {
+        // ИСПРАВЛЕНИЕ: Отрезаем параметры запроса (всё, что после '?')
+        const basePath = path.split('?')[0];
+
+        switch (basePath) {
             case '/login':
-                renderLogin(app); // Вызываем функцию из loginComponent.ts
+                renderLogin(app);
                 break;
             case '/register':
-                renderRegistration(app); // Вызываем функцию из registerComponent.ts
+                renderRegistration(app);
                 break;
             case '/main':
             case '/':
-                renderHome(app); // Вызываем функцию из homeComponent.ts
+                renderHome(app);
+                break;
+            case '/profile':
+                renderProfile(app);
+                break;
+            case '/delivery':
+                renderDelivery(app);
+                break;
+            case '/product': // ДОБАВЛЕН РОУТ ДЛЯ КАРТОЧКИ ТОВАРА
+                renderProduct(app);
                 break;
             default:
-                renderLogin(app); // По умолчанию кидаем на логин
+                renderLogin(app);
                 break;
         }
     }
 }
 
-// Слушаем кнопки "назад/вперед" в браузере
 window.addEventListener('popstate', () => {
     Router.navigate(window.location.pathname);
 });
 
-// Запускаем роутер при первой загрузке страницы
-// Запускаем роутер при первой загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     const currentPath = window.location.pathname;
-    // МЕНЯЕМ ЗДЕСЬ: При первом заходе на корень сайта открываем главную
     Router.navigate(currentPath === '/' ? '/main' : currentPath); 
 });

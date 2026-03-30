@@ -19,7 +19,7 @@
     "password": "$2b$10$o1Rtms416LANEfpY7wP.7.LXqUKeWC1A0dN7CZlCo/DYLyH2gDfku",
     "email": "kirill@example.com",
     "phone": "+375291234567",
-    "sessionId": "b846772970b0fb9303c635012f4acded"
+    "sessionId": ""
   },
   {
     "id": 4,
@@ -51,7 +51,7 @@
     "password": "$2b$10$2THes1101nPSEg4gnxYMHuxQA9E5Wp2S03Jf1QMH7r7nyEfEoESWi",
     "email": "aleksej.lishtvan@gmail.com",
     "phone": "+37455555555",
-    "sessionId": "d8f11eb915b86f8f99d6910037f4a676"
+    "sessionId": "97b59d89440fc3c3d1795862b457ed54"
   },
   {
     "id": 8,

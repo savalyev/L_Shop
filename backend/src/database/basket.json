@@ -1,21 +1,17 @@
 [
   {
-    "id": 1,
-    "userId": 1,
-    "basket": [
-      {
-        "count": 2,
-        "productId": 5
-      },
-      {
-        "count": 2,
-        "productId": 4
-      }
-    ]
-  },
-  {
     "id": 2,
     "userId": 3,
     "basket": []
+  },
+  {
+    "id": 2,
+    "userId": 7,
+    "basket": [
+      {
+        "count": 2,
+        "productId": 3
+      }
+    ]
   }
 ]

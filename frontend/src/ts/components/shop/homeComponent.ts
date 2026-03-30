@@ -1,167 +1,487 @@
-import '../../../CSS/style_main.css';
+// src/ts/components/shop/homeComponent.ts
+import '../../../CSS/style_main.css'; 
 import { Router } from '../../main';
 
-// Используем alias, который мы настроили в tsconfig.json
-import type { Product } from '@backend/models/model';
+// --- СТРОГАЯ ТИПИЗАЦИЯ ---
+interface Product {
+    id: number;
+    title: string;
+    price: number;
+    description: string;
+    categories?: string[];
+    images?: { preview: string; };
+    discount?: number;
+    isAvailable?: boolean;
+}
+
+interface BasketItem {
+    productId: number;
+    count: number;
+}
+
+interface BasketData {
+    id?: number;
+    userId?: number;
+    basket?: BasketItem[];
+}
 
 const API_BASE_URL = 'http://localhost:3000/api';
+let isUserAuthorized = false;
 
+// --- ПРОВЕРКА АВТОРИЗАЦИИ ---
+async function checkAuthStatus(): Promise<boolean> {
+    try {
+        const res = await fetch(`${API_BASE_URL}/users/me`, { credentials: 'include' });
+        isUserAuthorized = res.ok;
+        return res.ok;
+    } catch (e) {
+        isUserAuthorized = false;
+        return false;
+    }
+}
 
-export function renderHome(container: HTMLElement) {
+// --- ГЛАВНАЯ ФУНКЦИЯ РЕНДЕРА ---
+export async function renderHome(container: HTMLElement) {
+    await checkAuthStatus();
+
     container.innerHTML = `
-        <!-- Top Header -->
-        <div class="top-header">
-            <div class="container">
-                <div class="location-info">
-                    <span>📍</span>
-                    <span class="location-text">Минск</span>
-                </div>
-                <div class="user-links">
-                    <a href="#" onclick="return false"><span>📦</span> Заказы</a>
-                    <a href="#" onclick="return false"><span>👤</span> Личный кабинет</a>
-                    <a href="#" id="openCartTop" onclick="return false"><span>🛒</span> Корзина</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Header -->
-        <div class="main-header">
-            <div class="container">
-                <a href="#" class="logo" onclick="return false">REUTKUPI</a>
+        <header class="shop-header">
+            <div class="container header-inner">
+                <a href="#" class="shop-logo">REUTKUPI</a>
                 
-                <button class="catalog-btn">
-                    <span>☰</span> Каталог
-                </button>
-                
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Найти товар...">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Искать товары (нажмите Enter)...">
                     <button id="searchBtn">🔍</button>
                 </div>
                 
-                <div class="header-icons">
-                    <div class="header-icon" id="openCartBtn">
+                <div class="header-actions">
+                    <button class="action-btn" id="profileButton">
+                        <span>👤</span>
+                        <span id="profileBtnText">${isUserAuthorized ? 'Профиль' : 'Войти'}</span>
+                    </button>
+                    <button class="action-btn" id="openCartBtn">
                         <span>🛒</span>
-                        <span>Корзина</span>
-                        <span class="cart-count" id="cartCount">0</span>
-                    </div>
-                    <div class="auth-buttons">
-                        <button class="login-btn" id="loginButton">
-                            <span>🔑</span>
-                            <span id="authButtonText">Войти</span>
-                        </button>
-                    </div>
+                        Корзина
+                        <div class="cart-badge" id="cartCount">0</div>
+                    </button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- Main Content -->
-        <div class="container" id="mainContent">
-            <h2>Каталог товаров</h2>
-            <!-- Сетка для динамических товаров -->
-            <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 20px 0;">
-                <p id="loadingText">Загрузка товаров...</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer>
-            <!-- Твой футер... (я оставил структуру для краткости) -->
-            <div class="container">
-                <p>© 2025 REUTKUPI - Ваш интернет-магазин.</p>
-            </div>
-        </footer>
-
-        <!-- Cart Modal -->
-        <div id="cartModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-            <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 8px;">
-                <span class="close" id="closeCartBtn" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
-                <h2>Корзина</h2>
-                <div id="cartItems">
-                    <p>Ваша корзина пуста</p>
+        <main class="container">
+            <div class="shop-controls" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h2 class="catalog-title" style="margin: 0;">Каталог товаров</h2>
+                    <select id="sortSelect" class="modern-select" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="">Сортировка: По умолчанию</option>
+                        <option value="asc">Сначала дешевле</option>
+                        <option value="desc">Сначала дороже</option>
+                    </select>
                 </div>
-                <div class="cart-total" id="cartTotal" style="margin-top: 20px; font-weight: bold; font-size: 18px;">Итого: 0 BYN</div>
-                <button class="checkout-btn" id="checkoutBtn" style="margin-top: 15px; width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Перейти к оформлению</button>
+
+                <!-- ПАНЕЛЬ ФИЛЬТРОВ (ДИНАМИЧЕСКАЯ) -->
+                <div class="filters-panel" style="display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;">
+                    <select id="categoryFilter" class="modern-select" style="flex: 1; min-width: 150px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="">Загрузка категорий...</option>
+                    </select>
+                    
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <input type="number" id="minPrice" placeholder="Мин. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <span>-</span>
+                        <input type="number" id="maxPrice" placeholder="Макс. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                    </div>
+                    
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 14px;">
+                        <input type="checkbox" id="isAvailable">
+                        Только в наличии
+                    </label>
+                    
+                    <button id="applyFiltersBtn" style="padding: 8px 15px; background: #f91155; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: auto;">
+                        Применить фильтры
+                    </button>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <div class="loading-spinner"></div>
+            </div>
+        </main>
+
+        <!-- Модальное окно корзины -->
+        <div class="modal-overlay" id="cartModal">
+            <div class="modal-box">
+                <button class="modal-close" id="closeCartBtn">✖</button>
+                <h2>Ваша корзина</h2>
+                <div id="cartItems" class="cart-items-container">Загрузка...</div>
+                <div class="cart-footer">
+                    <div class="cart-total" id="cartTotal">Итого: 0 BYN</div>
+                    <button class="checkout-btn" id="checkoutBtn">Оформить доставку</button>
+                </div>
             </div>
         </div>
     `;
 
-    // Логика перехода на авторизацию
-    const loginButton = document.getElementById('loginButton');
-    if (loginButton) {
-        loginButton.addEventListener('click', () => {
-            Router.navigate('/login');
-        });
-    }
-
-    // Логика модалки
-    const cartModal = document.getElementById('cartModal');
-    const closeCartBtn = document.getElementById('closeCartBtn');
-    
-    document.getElementById('openCartBtn')?.addEventListener('click', () => {
-        if (cartModal) cartModal.style.display = 'block';
+    // Слушатели профиля и корзины
+    document.getElementById('profileButton')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        Router.navigate(isUserAuthorized ? '/profile' : '/login');
     });
-    
-    if (closeCartBtn && cartModal) {
-        closeCartBtn.addEventListener('click', () => cartModal.style.display = 'none');
-        window.addEventListener('click', (e) => {
-            if (e.target === cartModal) cartModal.style.display = 'none';
+
+    const cartModal = document.getElementById('cartModal');
+    document.getElementById('openCartBtn')?.addEventListener('click', (e) => { 
+        e.preventDefault();
+        if (!isUserAuthorized) { Router.navigate('/login'); return; }
+        if (cartModal) { cartModal.style.display = 'flex'; loadCartItems(); }
+    });
+
+    document.getElementById('closeCartBtn')?.addEventListener('click', () => { 
+        if(cartModal) cartModal.style.display = 'none'; 
+    });
+
+    document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+        if(cartModal) cartModal.style.display = 'none'; 
+        Router.navigate('/delivery');
+    });
+
+    // Делегирование событий на сетку товаров (Клик по карточке / Добавление в корзину)
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid) {
+        productsGrid.addEventListener('click', async (e) => {
+            const target = e.target as HTMLElement;
+            const card = target.closest('.product-card');
+            const addBtn = card?.querySelector('.add-btn');
+            const productId = parseInt(addBtn?.getAttribute('data-id') || '0');
+
+            if (target.classList.contains('add-btn')) {
+                e.preventDefault();
+                if (!isUserAuthorized) { Router.navigate('/login'); return; }
+                if (productId > 0) await addToCartApi(productId);
+            } 
+            else if (card && productId > 0) {
+                Router.navigate(`/product?id=${productId}`);
+            }
         });
     }
 
-    // 2. ВЫЗЫВАЕМ ЗАГРУЗКУ ТОВАРОВ
-    loadProducts();
+    // Слушатели внутри корзины
+    const cartItemsContainer = document.getElementById('cartItems');
+    if (cartItemsContainer) {
+        cartItemsContainer.addEventListener('click', async (e) => {
+            const target = e.target as HTMLElement;
+            const productId = parseInt(target.getAttribute('data-id') || '0');
+            
+            if (productId > 0) {
+                if (target.classList.contains('cart-add-btn')) await addToCartApi(productId, false); 
+                else if (target.classList.contains('cart-minus-btn')) await removeCountFromCartApi(productId);
+                else if (target.classList.contains('cart-remove-btn')) await removeProductFromCartApi(productId);
+                
+                if (target.tagName === 'BUTTON') {
+                    await loadCartItems();
+                    await updateCartCounter();
+                }
+            }
+        });
+    }
+
+    // Слушатели поиска и фильтров
+    document.getElementById('applyFiltersBtn')?.addEventListener('click', loadProducts);
+    document.getElementById('sortSelect')?.addEventListener('change', loadProducts);
+    document.getElementById('searchBtn')?.addEventListener('click', handleSearch);
+    document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSearch();
+    });
+
+    // Инициализация
+    await loadCategories(); // Сначала грузим динамические категории
+    loadProducts();         // Затем грузим сами товары
+    if (isUserAuthorized) updateCartCounter();
+}
+
+// --- ДИНАМИЧЕСКИЕ КАТЕГОРИИ ИЗ БД ---
+async function loadCategories() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/products`);
+        const data = await responseToJson(res);
+        const productsArray: Product[] = Array.isArray(data) ? data : (data ? [data] : []);
+        
+        // Вытягиваем уникальные категории с помощью Set
+        const uniqueCategories = new Set<string>();
+        productsArray.forEach(p => {
+            if (p.categories && Array.isArray(p.categories)) {
+                p.categories.forEach(c => uniqueCategories.add(c));
+            }
+        });
+
+        const select = document.getElementById('categoryFilter');
+        if (select) {
+            select.innerHTML = '<option value="">Все категории</option>';
+            uniqueCategories.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+            });
+        }
+    } catch (e) {
+        console.error("Не удалось загрузить категории:", e);
+        const select = document.getElementById('categoryFilter');
+        if (select) select.innerHTML = '<option value="">Ошибка загрузки</option>';
+    }
+}
+
+// --- ПОИСК И КАТАЛОГ ---
+// --- ПОИСК И КАТАЛОГ ---
+async function handleSearch() {
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+    const query = searchInput ? searchInput.value.trim() : '';
+    
+    // Если поле пустое, просто загружаем обычный каталог с учетом фильтров
+    if (!query) return loadProducts();
+
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    grid.innerHTML = '<div class="loading-spinner"></div>';
+
+    try {
+        // Запускаем оба запроса параллельно для скорости
+        const [nameRes, descRes] = await Promise.all([
+            fetch(`${API_BASE_URL}/products/by-name?name=${encodeURIComponent(query)}`),
+            fetch(`${API_BASE_URL}/products/by-description?description=${encodeURIComponent(query)}`)
+        ]);
+
+        const nameData = await responseToJson(nameRes);
+        const descData = await responseToJson(descRes);
+
+        const nameProducts: Product[] = Array.isArray(nameData) ? nameData : (nameData ? [nameData] : []);
+        const descProducts: Product[] = Array.isArray(descData) ? descData : (descData ? [descData] : []);
+
+        // Объединяем результаты в один массив
+        const combinedProducts = [...nameProducts, ...descProducts];
+
+        // Убираем дубликаты по ID (чтобы товар не выводился дважды)
+        const uniqueProductsMap = new Map<number, Product>();
+        combinedProducts.forEach(product => {
+            if (product && product.id) {
+                uniqueProductsMap.set(product.id, product);
+            }
+        });
+
+        // Превращаем обратно в массив
+        const finalProducts = Array.from(uniqueProductsMap.values());
+
+        // Отрисовываем
+        renderProductCards(finalProducts);
+    } catch (error) {
+        console.error("Ошибка при поиске:", error);
+        grid.innerHTML = '<p style="color: red; text-align: center;">Ошибка поиска</p>';
+    }
 }
 
 async function loadProducts() {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
+    
+    // Собираем значения со всех фильтров
+    const sort = (document.getElementById('sortSelect') as HTMLSelectElement)?.value || '';
+    const category = (document.getElementById('categoryFilter') as HTMLSelectElement)?.value || '';
+    const minPrice = (document.getElementById('minPrice') as HTMLInputElement)?.value || '';
+    const maxPrice = (document.getElementById('maxPrice') as HTMLInputElement)?.value || '';
+    const isAvailable = (document.getElementById('isAvailable') as HTMLInputElement)?.checked || false;
+    
+    grid.innerHTML = '<div class="loading-spinner"></div>';
 
     try {
-        const response = await fetch(`${API_BASE_URL}/products`);
-        if (!response.ok) throw new Error('Ошибка загрузки');
+        let url = `${API_BASE_URL}/products`;
         
-        // 3. ИСПРАВЛЕННЫЙ ПАРСИНГ
-        const data = await response.json();
-        
-        // В зависимости от того, как контроллер отправляет (res.json(data) или res.json({data: data}))
-        const products: Product[] = Array.isArray(data) ? data : data.data;
+        // Если использован хотя бы один фильтр, используем роут /fillters
+        if (category || minPrice || maxPrice || isAvailable) {
+            const params = new URLSearchParams();
+            if (category) params.append('category', category);
+            if (minPrice) params.append('minPrice', minPrice);
+            if (maxPrice) params.append('maxPrice', maxPrice);
+            if (isAvailable) params.append('isAvailable', 'true');
+            
+            url = `${API_BASE_URL}/products/fillters?${params.toString()}`;
+        } 
+        // Если фильтров нет, но есть сортировка - используем чистые роуты сортировки
+        else if (sort === 'asc') {
+            url = `${API_BASE_URL}/products/ascending`;
+        } else if (sort === 'desc') {
+            url = `${API_BASE_URL}/products/descending`;
+        }
 
-        if (!products || products.length === 0) {
-            grid.innerHTML = '<p>Товары не найдены.</p>';
+        const res = await fetch(url);
+        const products: Product[] = await responseToJson(res);
+
+        // Если мы использовали роут /fillters, бэкенд может не отсортировать их,
+        // поэтому мы дополнительно сортируем массив на фронте, если выбрана сортировка
+        if ((category || minPrice || maxPrice || isAvailable) && sort) {
+            products.sort((a, b) => sort === 'asc' ? a.price - b.price : b.price - a.price);
+        }
+
+        renderProductCards(products);
+    } catch (error) {
+        grid.innerHTML = '<p style="color: red;">Ошибка загрузки товаров</p>';
+    }
+}
+
+function renderProductCards(products: Product[]) {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+
+    if (!products || products.length === 0) {
+        grid.innerHTML = '<p class="empty-state">Ничего не найдено по этим фильтрам</p>';
+        return;
+    }
+
+    grid.innerHTML = '';
+    products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.style.cursor = 'pointer'; // Добавили курсор-пальчик
+        card.innerHTML = `
+            <img src="${product.images?.preview || ''}" class="product-img" alt="${product.title}">
+            <div data-title class="product-title">${product.title}</div>
+            <div class="product-desc">${product.description}</div>
+            <div class="product-bottom">
+                <div data-price class="product-price">${product.price} BYN</div>
+                <button class="add-btn" data-id="${product.id}">В корзину</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// --- API КОРЗИНЫ ---
+async function addToCartApi(productId: number, showAlert: boolean = true) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/add-to-basket`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+        if (res.ok) {
+            updateCartCounter();
+            if(showAlert) alert('Товар добавлен!');
+        }
+    } catch (error) { console.error('Сбой сети при добавлении в корзину'); }
+}
+
+async function removeCountFromCartApi(productId: number) {
+    try {
+        await fetch(`${API_BASE_URL}/basket/remove-count`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+    } catch (error) {}
+}
+
+async function removeProductFromCartApi(productId: number) {
+    try {
+        await fetch(`${API_BASE_URL}/basket/remove-product`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+    } catch (error) {}
+}
+
+async function updateCartCounter() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/mybasket`, { credentials: 'include' });
+        if (!res.ok) {
+            const badge = document.getElementById('cartCount');
+            if (badge) badge.textContent = '0';
+            return;
+        }
+        const data: BasketData = await responseToJson(res);
+        const cartArray: BasketItem[] = data.basket || [];
+        const count = cartArray.reduce((sum, item) => sum + item.count, 0);
+        
+        const badge = document.getElementById('cartCount');
+        if (badge) badge.textContent = count.toString();
+    } catch (e) {}
+}
+
+async function loadCartItems() {
+    const container = document.getElementById('cartItems');
+    if (!container) return;
+    container.innerHTML = '<p>Загрузка...</p>';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/mybasket`, { credentials: 'include' });
+        if (!res.ok) {
+            container.innerHTML = '<p style="text-align:center;">Ваша корзина пуста</p>';
+            const cartTotal = document.getElementById('cartTotal');
+            if (cartTotal) cartTotal.textContent = 'Итого: 0 BYN';
             return;
         }
 
-        grid.innerHTML = '';
+        const cartData: BasketData = await responseToJson(res);
+        const cartArray: BasketItem[] = (cartData as any).userbasket?.basket || cartData.basket || [];
+        
+        if (cartArray.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">Ваша корзина пуста</p>';
+            const cartTotal = document.getElementById('cartTotal');
+            if (cartTotal) cartTotal.textContent = 'Итого: 0 BYN';
+            return;
+        }
 
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.style.cssText = 'border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; background: white;';
+        const productIds = cartArray.map(item => item.productId);
+        const prodRes = await fetch(`${API_BASE_URL}/products/for-basket`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: productIds })
+        });
+        const prodData = await responseToJson(prodRes);
+        const productsInfo: Product[] = prodData.products ? prodData.products : (Array.isArray(prodData) ? prodData : []);
+
+        let total = 0;
+        
+        container.innerHTML = cartArray.map((cartItem) => {
+            const product = productsInfo.find((p) => Number(p.id) === Number(cartItem.productId));
+            if (!product) return '';
             
-            card.innerHTML = `
-                <img src="${product.images?.preview || ''}" alt="${product.title}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
-                <h3 data-title style="font-size: 16px; margin: 10px 0;">${product.title}</h3>
-                <p style="font-size: 12px; color: #666; height: 40px; overflow: hidden;">${product.description}</p>
-                <div data-price style="font-size: 18px; font-weight: bold; margin: 10px 0;">
-                    ${product.price} BYN
+            const itemTotal = product.price * cartItem.count;
+            total += itemTotal;
+            
+            return `
+                <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <img src="${product.images?.preview || ''}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                        <div>
+                            <h4 data-title="basket" style="margin:0; font-size: 14px;">${product.title}</h4>
+                            <span data-price="basket" style="color:#f91155; font-weight:bold; font-size: 14px;">${product.price} BYN</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <div class="quantity-controls" style="display:flex; align-items:center; border: 1px solid #ccc; border-radius: 4px;">
+                            <button class="cart-minus-btn" data-id="${cartItem.productId}" style="padding: 2px 8px; border:none; background:none; cursor:pointer;">-</button>
+                            <span style="padding: 0 8px;">${cartItem.count}</span>
+                            <button class="cart-add-btn" data-id="${cartItem.productId}" style="padding: 2px 8px; border:none; background:none; cursor:pointer;">+</button>
+                        </div>
+                        <button class="cart-remove-btn" data-id="${cartItem.productId}" style="border:none; background:none; color:red; cursor:pointer; font-size: 16px;">🗑️</button>
+                    </div>
                 </div>
-                <button class="add-to-cart-btn" data-id="${product.id}" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    В корзину
-                </button>
             `;
-            grid.appendChild(card);
-        });
+        }).join('');
+        
+        const cartTotal = document.getElementById('cartTotal');
+        if (cartTotal) cartTotal.textContent = `Итого: ${total.toFixed(2)} BYN`;
 
-        // Слушатели кнопок корзины
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const target = e.target as HTMLButtonElement;
-                const productId = target.getAttribute('data-id');
-                alert(`Товар с ID ${productId} добавлен! (тут будет POST запрос)`);
-            });
-        });
-
-    } catch (error) {
-        console.error('Ошибка:', error);
-        grid.innerHTML = '<p style="color: red;">Не удалось загрузить товары.</p>';
+    } catch (e) {
+        container.innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки корзины</p>';
     }
+}
+
+// Утилита для разбора ответа сервера
+async function responseToJson(res: Response) {
+    const text = await res.text();
+    if (!text) return {};
+    try {
+        const data = JSON.parse(text);
+        return data.data !== undefined ? data.data : data; 
+    } catch(e) { return {}; }
 }
