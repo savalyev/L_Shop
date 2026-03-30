@@ -2,10 +2,13 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "strict": true,
-    "skipLibCheck": true,
-    "lib": ["ESNext", "DOM"]
+    // Вот эта часть важна для путей:
+    "baseUrl": ".",
+    "paths": {
+      "@backend/*": ["../backend/src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src/**/*", "../backend/src/models/**/*"]
 }
