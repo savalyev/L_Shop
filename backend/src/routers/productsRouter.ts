@@ -5,7 +5,23 @@ import { validateProductCreate } from '../middlewares/productMiddleware';
 const productsRouter = Router();
 
 
-//GET запрос, получение всех продуктов
+/**
+ * @openapi
+ * /api/products:
+ *   get:
+ *     summary: Получить все товары
+ *     tags:
+ *       - Products
+ *     responses:
+ *       200:
+ *         description: Список товаров успешно получен
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 productsRouter.get('/', ProductsController.getAll);
 
 //GET запрос, получение продукта по имени

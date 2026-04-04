@@ -1,0 +1,94 @@
+components:
+  schemas:
+
+    Adress:
+      type: object
+      required:
+      properties:
+        country:
+          type: string
+          example: "Belarus"
+        town:
+          type: string
+          example: "Minsk"
+        street:
+          type: string
+          example: "Kolesnikova"
+        houseNumber:
+          type: string
+          example: "3"
+
+    ProductImages:
+      type: object
+      required:
+        - preview
+      properties:
+        preview:
+          type: string
+          example: "https://example.com/images/product-preview.jpg"
+        gallery:
+          type: array
+          items:
+            type: string
+          example:
+            - "https://example.com/images/product-preview.jpg"
+            - "https://example.com/images/product-preview.jpg"
+
+    ProductDelivery:
+      type: object
+      required:
+        - startTown
+        - earlyDate
+        - price
+      properties:
+        startTown:
+          $ref "#/components/schemas/Adress"
+        earlyDate:
+          type: string
+          format: date-time
+          example: "2026-04-04T10:00:00Z"
+        price: 
+          type: number
+          example: 15.5
+
+    Product:
+      type: object
+      required:
+        - id
+        - title
+        - price
+        - isAvailable
+        - description
+        - categories
+        - images
+        - discount
+      properties:
+        id:
+          type: number
+          example: 5
+        title:
+          type: string
+          example: "Gaming Mouse"
+        price:
+          type: number
+          example: 129.99
+        isAvailable:
+          type: boolean
+          example: true
+        description:
+          type: string
+          example: "Беспроводная игровая мышь с RGB-подсветкой"
+        categories:
+          type: array
+          items:
+            type: string
+          example:
+            - "electronics"
+            - "gaming"
+        images: 
+          $ref: "#/components/schemas/ProductImages"
+        delivery:
+          $ref: "#/components/schemas/ProductDelivery"
+        discount:
+          type: number
+          example: 15    
