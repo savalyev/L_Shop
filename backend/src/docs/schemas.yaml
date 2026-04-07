@@ -1,6 +1,33 @@
 components:
   schemas:
 
+    User:
+      type: object
+      required:
+         - id
+         - name
+         - password
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: "Kirill"
+        password:
+          type: string
+          example: "hashcode"
+        email:
+          type: string
+          example: "kir8965@mail.ru"
+        phone:
+          type: string
+          example: "+375291239959"
+        sessiondId:
+          type: string
+          example: "sessioIdExample"
+
+
     Adress:
       type: object
       required:
@@ -42,7 +69,7 @@ components:
         - price
       properties:
         startTown:
-          $ref "#/components/schemas/Adress"
+          $ref: '#/components/schemas/Adress'
         earlyDate:
           type: string
           format: date-time
@@ -91,4 +118,119 @@ components:
           $ref: "#/components/schemas/ProductDelivery"
         discount:
           type: number
-          example: 15    
+          example: 15 
+
+    Delivery:
+      type: object
+      required:
+        - id
+        - endadress
+        - endDate
+        - basket
+        - cost
+      properties:
+        id:
+          type: number
+          example: 1
+        endadress:
+          $ref: "#/components/schemas/Adress"
+        endDate:
+          type: string
+          format: date-time
+          example: "2026-04-04T10:00:00Z"
+        basket:
+          $ref: "#/components/schemas/Basket"
+        cost:
+          type: number
+          example: 55.5
+    
+    Basket:
+      type: object
+      required:
+        - id
+        - userId
+        - basket
+      properties:
+        id:
+          type: number
+          example: 5
+        userId:
+          type: number
+          example: 1
+        basket:
+          type: array
+          items:
+            $ref: "#/components/schemas/BasketProducts"
+    
+    BasketProducts:
+      type: object
+      required:
+        - count
+        - productId
+      properties:
+        count:
+          type: number
+          example: 5
+        productId:
+          type: number
+          example: 10
+
+    ProductCreateBody:
+      type: object
+      required:
+        - title
+        - price
+        - isAvailable
+        - description
+        - categories
+        - images
+        - discount
+      properties:
+        title:
+          type: string
+          example: "Gaming Mouse"
+        price:
+          type: number
+          example: 129.99
+        isAvailable:
+          type: boolean
+          example: true
+        description:
+          type: string
+          example: "Беспроводная игровая мышь с RGB-подсветкой"
+        categories:
+          type: array
+          items:
+            type: string
+          example:
+            - "electronics"
+            - "gaming"
+        images:
+          $ref: '#/components/schemas/ProductImages'
+        delivery:
+          $ref: '#/components/schemas/ProductDelivery'
+        discount:
+          type: number
+          example: 10
+
+    UserCreateBody:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          example: "Kirill"
+        password:
+          type: string
+          example: "qwerty123"
+        email:
+          type: string
+          example: "kirill@example.com"
+        phone:
+          type: string
+          example: "+375291112233"
+        sessionId:
+          type: string
+          example: "sess_abc123"
