@@ -2,43 +2,43 @@
   {
     "id": 1,
     "endadress": {
-      "country": "Беларусь",
-      "town": "Minsk",
-      "street": "Ленина",
-      "houseNumber": "12-0"
+      "country": "USA",
+      "town": "New York",
+      "street": "Broadway",
+      "houseNumber": "4-0"
     },
-    "endDate": "2026-03-31T21:42:45.091Z",
-    "basket": {
-      "id": 2,
-      "userId": 3,
-      "basket": [
-        {
-          "count": 7,
-          "productId": 3
-        }
-      ]
-    },
-    "cost": 4
-  },
-  {
-    "id": 2,
-    "endadress": {
-      "country": "Беларусь",
-      "town": "Minsk",
-      "street": "Ленина",
-      "houseNumber": "12-0"
-    },
-    "endDate": "2026-03-31T21:53:19.912Z",
+    "endDate": "2026-04-16T19:03:54.933Z",
     "basket": {
       "id": 2,
       "userId": 3,
       "basket": [
         {
           "count": 1,
-          "productId": 3
+          "productId": 6
         }
       ]
     },
-    "cost": 4
+    "cost": 4.1
+  },
+  {
+    "id": 2,
+    "endadress": {
+      "country": "USA",
+      "town": "New York",
+      "street": "Broadway",
+      "houseNumber": "4-0"
+    },
+    "endDate": "2026-04-15T19:05:39.186Z",
+    "basket": {
+      "id": 2,
+      "userId": 3,
+      "basket": [
+        {
+          "count": 2,
+          "productId": 4
+        }
+      ]
+    },
+    "cost": 3.9
   }
 ]
