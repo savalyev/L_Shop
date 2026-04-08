@@ -118,18 +118,6 @@ basketRouter.patch('/remove-count', authMiddleware, BasketController.removeFromB
  *     description: Требуется cookie sessionId.
  *     tags:
  *       - Basket
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - productId
- *             properties:
- *               productId:
- *                 type: integer
- *                 example: 101
  *     responses:
  *       200:
  *         description: Корзина очищена, возвращено итоговое состояние (может быть пустым)

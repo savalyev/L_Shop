@@ -91,13 +91,6 @@ export class BasketController {
 
             const user = res.locals.user;
 
-            const productId = Number(req.body.productId);
-
-            if (!productId) {
-                res.status(400).send({ error: "product not found" });
-                return;
-            }
-
             const userbasket = BasketService.RemoveAllBasket(Number(user?.id));
 
             res.status(200).send(userbasket);
