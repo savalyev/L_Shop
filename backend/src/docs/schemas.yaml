@@ -27,6 +27,25 @@ components:
           type: string
           example: "sessioIdExample"
 
+    RequestUser:
+      type: object
+      required:
+         - id
+         - name
+      properties:
+        id:
+          type: number
+          example: 2
+        name:
+          type: string
+          example: "Lesha"
+        email:
+          type: string
+          example: "lesha228@mail.ru"
+        phone:
+          type: string
+          example: "+375291115352"
+
 
     Adress:
       type: object
@@ -234,3 +253,36 @@ components:
         sessionId:
           type: string
           example: "sess_abc123"
+    
+    RegistrationBody:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          example: "Lesha"
+        password:
+          type: string
+          example: "qwerty123"
+        email:
+          type: string
+          example: "lesha228@mail.ru"
+        phone:
+          type: string
+          example: "+375291115352"
+    
+    LoginBody:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          example: "Lesha"
+        password:
+          type: string
+          example: "qwerty123"
+      
