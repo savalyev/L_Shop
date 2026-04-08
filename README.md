@@ -153,15 +153,15 @@ npm run dev
 
 ### Delivery - `/api/delivery`
 
-| Метод    | Путь                             | Описание                                   |     |
-| -------- | -------------------------------- | ------------------------------------------ | --- |
-| `GET`    | `/api/delivery/getall`           | Получение всех доставок по userId          |     |
-| `GET`    | `/api/delivery/get-all`          | Получение всех доставок по Cookies         |     |
-| `POST`   | `/api/delivery/`                 | Создание новой доставки по userId          |     |
-| `POST`   | `/api/delivery/createDeliv`      | Создание новой доставки по Cookies         |     |
-| `DELETE` | `/api/delivery/delete-delivery'` | Удаление одной позиции доставки по userId  |     |
-| `DELETE` | `/api/delivery/remove-delivery`  | Удаление одной позиции доставки по Cookies |     |
-|          |                                  |                                            |     |
+| Метод    | Путь                             | Описание                                   
+| -------- | -------------------------------- | ------------------------------------------
+| `GET`    | `/api/delivery/getall`           | Получение всех доставок по userId
+| `GET`    | `/api/delivery/get-all`          | Получение всех доставок по Cookies 
+| `POST`   | `/api/delivery/`                 | Создание новой доставки по userId
+| `POST`   | `/api/delivery/createDeliv`      | Создание новой доставки по Cookies
+| `DELETE` | `/api/delivery/delete-delivery'` | Удаление одной позиции доставки по userId
+| `DELETE` | `/api/delivery/remove-delivery`  | Удаление одной позиции доставки по Cookies
+
 
 #### POST `/api/delivery/createDeliv` — тело запроса
 
