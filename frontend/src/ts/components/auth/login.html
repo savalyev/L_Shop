@@ -1,0 +1,28 @@
+<div class="auth-page">
+    <div class="auth-card">
+        <a href="#" class="auth-logo">REUTKUPI</a>
+        <h1 class="auth-title">С возвращением!</h1>
+        <p class="auth-subtitle">Войдите, чтобы продолжить покупки</p>
+        
+        <div id="errorMessage" class="message msg-error" style="display: none;"></div>
+        <div id="successMessage" class="message msg-success" style="display: none;"></div>
+
+        <form class="auth-form" id="loginForm">
+            <div class="auth-input-wrapper">
+                <label for="login">Телефон, email или имя</label>
+                <input type="text" id="login" name="login" class="auth-input" placeholder="+375... / почта / имя" required autocomplete="username">
+            </div>
+            
+            <div class="auth-input-wrapper">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" class="auth-input" placeholder="Введите пароль" required autocomplete="current-password">
+            </div>
+            
+            <button type="submit" class="auth-btn" id="submitBtn">Войти</button>
+        </form>
+        
+        <div class="auth-footer">
+            Ещё нет аккаунта? <a href="#" id="goToReg" class="auth-link">Зарегистрироваться</a>
+        </div>
+    </div>
+</div>

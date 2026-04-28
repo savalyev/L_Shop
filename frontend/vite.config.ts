@@ -26,3 +26,8 @@ export default defineConfig({
     open: '/' // В SPA лучше открывать корень, а роутер сам кинет на /login
   }
 });
+// src/vite-env.d.ts
+declare module '*?raw' {
+  const content: string;
+  export default content;
+}

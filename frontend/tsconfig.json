@@ -4,11 +4,11 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
-    // Вот эта часть важна для путей:
     "baseUrl": ".",
     "paths": {
       "@backend/*": ["../backend/src/*"]
-    }
+    },
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*", "../backend/src/models/**/*"]
 }
