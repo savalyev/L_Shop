@@ -6,37 +6,51 @@ import * as path from 'path';
 const filePath = path.resolve(__dirname, 'basket.json');
 const filePathProduct = path.resolve(__dirname, 'products.json');
 
+/**
+ * Читает и возвращает все данные корзин из файла `basket.json`.
+ * @returns {Basket[]} Массив всех корзин пользователей.
+ */
 function getData(): Basket[] {
     const file = fs.readFileSync(filePath, 'utf-8');
-
     const allbasket: Basket[] = JSON.parse(file);
-
     return allbasket;
 }
 
+/**
+ * Читает и возвращает все данные продуктов из файла `products.json`.
+ * @returns {Product[]} Массив всех продуктов в базе данных.
+ */
 function getDataProduct(): Product[] {
     const file = fs.readFileSync(filePathProduct, 'utf-8');
-
     const allproducts: Product[] = JSON.parse(file);
-
     return allproducts;
 }
 
+/**
+ * Класс для работы с корзиной пользователей на основе JSON файла.
+ */
 export class BasketDB {
 
-    public static GetBasketUserId(userId: number):Basket|undefined {
-
+    /**
+     * Получает корзину конкретного пользователя по его ID.
+     * @param {number} userId - Идентификатор пользователя.
+     * @returns {Basket | undefined} Объект корзины пользователя или undefined, если корзина не найдена.
+     */
+    public static GetBasketUserId(userId: number): Basket | undefined {
         const allbasket: Basket[] = getData();
-
         const userbasket = allbasket.find(b => String(b.userId) === String(userId));
-
         return userbasket;
     }
 
+    /**
+     * Создает новую пустую корзину для пользователя и сохраняет ее в JSON файл.
+     * @param {number} userId - Идентификатор пользователя, для которого создается корзина.
+     * @returns {Basket} Созданный объект корзины.
+     * @private
+     */
     private static CreatBasket(userId: number): Basket {
         const allbasket: Basket[] = getData();
-
-        let maxId:number = allbasket.length + 1;
+        let maxId: number = allbasket.length + 1;
 
         const userBasket: Basket = {
             id: maxId,
@@ -50,35 +64,38 @@ export class BasketDB {
         return userBasket;
     }
 
-
-    public static AddtoBasket(userId: number, productId: number):Basket {
-
-        let userbasket:Basket | undefined = this.GetBasketUserId(userId);
+    /**
+     * Добавляет один товар в корзину пользователя. 
+     * Если товар уже есть, увеличивает его количество на 1.
+     * Если корзины не существует, она создается автоматически.
+     * @param {number} userId - Идентификатор пользователя.
+     * @param {number} productId - Идентификатор добавляемого продукта.
+     * @returns {Basket} Обновленный объект корзины.
+     * @throws {Error} Если продукт с указанным ID не найден в базе продуктов.
+     */
+    public static AddtoBasket(userId: number, productId: number): Basket {
+        let userbasket: Basket | undefined = this.GetBasketUserId(userId);
 
         if (!userbasket) {
             userbasket = this.CreatBasket(userId);
         }
 
         const allproduct: Product[] = getDataProduct();
-
-
-        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        let product: Product | undefined = allproduct.find(product => product.id === productId);
         
         if (!product) {
             throw new Error("Product not found");
         }
+
         const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
         
         if (existproduct) {
             existproduct.count += 1;
-        }
-        else {
-
+        } else {
             const BasketProduct = {
                 count: 1,
                 productId: product.id
-            }
-
+            };
             userbasket.basket.push(BasketProduct);
         }
 
@@ -87,8 +104,7 @@ export class BasketDB {
 
         if (index !== -1) {
             allbasket[index] = userbasket;
-        }
-        else {
+        } else {
             allbasket.push(userbasket);
         }
 
@@ -97,22 +113,27 @@ export class BasketDB {
         return userbasket;
     }
 
-    public static RemoveAllBasket(userId: number): Basket{
+    /**
+     * Полностью очищает корзину пользователя (удаляет все товары).
+     * @param {number} userId - Идентификатор пользователя.
+     * @returns {Basket} Пустой объект корзины пользователя.
+     * @throws {Error} Если корзина для данного пользователя не найдена.
+     */
+    public static RemoveAllBasket(userId: number): Basket {
         let userbasket: Basket | undefined = this.GetBasketUserId(userId);
 
         if(!userbasket){
             throw new Error("Basket not found");
         }
 
-        userbasket.basket.length=0;
+        userbasket.basket.length = 0;
 
         const allbasket: Basket[] = getData();
         const index = allbasket.findIndex(basket => String(basket.userId) === String(userId));
 
         if (index !== -1) {
             allbasket[index] = userbasket;
-        }
-        else {
+        } else {
             allbasket.push(userbasket);
         }
 
@@ -121,7 +142,14 @@ export class BasketDB {
         return userbasket;
     }
 
-    public static RemoveProductBasket(userId: number, productId: number): Basket{
+    /**
+     * Полностью удаляет конкретный товар из корзины (независимо от его количества).
+     * @param {number} userId - Идентификатор пользователя.
+     * @param {number} productId - Идентификатор удаляемого продукта.
+     * @returns {Basket} Обновленный объект корзины пользователя.
+     * @throws {Error} Если корзина, продукт в базе или продукт в корзине не найдены.
+     */
+    public static RemoveProductBasket(userId: number, productId: number): Basket {
         let userbasket: Basket | undefined = this.GetBasketUserId(userId);
 
         if(!userbasket){
@@ -129,19 +157,18 @@ export class BasketDB {
         }
 
         const allproduct = getDataProduct();
-
-        let product:Product | undefined = allproduct.find(product => product.id === productId);
+        let product: Product | undefined = allproduct.find(product => product.id === productId);
         
         if (!product) {
             throw new Error("Product not found");
         }
+
         const existproduct = userbasket.basket.find(prod => prod.productId === product.id);
         
         if(!existproduct){
-            throw new Error("product not found");
-        }
-        else{
-            userbasket.basket = userbasket.basket.filter(i=>i.productId != productId);
+            throw new Error("product not found in basket");
+        } else {
+            userbasket.basket = userbasket.basket.filter(i => i.productId != productId);
         }
 
         const allbasket: Basket[] = getData();
@@ -149,8 +176,7 @@ export class BasketDB {
 
         if (index !== -1) {
             allbasket[index] = userbasket;
-        }
-        else {
+        } else {
             allbasket.push(userbasket);
         }
 
@@ -159,6 +185,14 @@ export class BasketDB {
         return userbasket;
     }
 
+    /**
+     * Уменьшает количество товара в корзине на 1.
+     * Если количество товара достигает 0 (или было 1), товар полностью удаляется из корзины.
+     * @param {number} userId - Идентификатор пользователя.
+     * @param {number} productId - Идентификатор продукта.
+     * @returns {Basket} Обновленный объект корзины пользователя.
+     * @throws {Error} Если корзина, продукт в базе или продукт в корзине не найдены.
+     */
     public static RemoveFromBasket(userId: number, productId: number): Basket {
         let userbasket: Basket | undefined = this.GetBasketUserId(userId);
 
@@ -167,21 +201,19 @@ export class BasketDB {
         }
 
         const allproduct = getDataProduct();
-
-        let product:Product | undefined = allproduct.find(product => Number(product.id) === Number(productId));
+        let product: Product | undefined = allproduct.find(product => Number(product.id) === Number(productId));
         
         if (!product) {
             throw new Error("Product not found");
         }
+
         const existproduct = userbasket.basket.find(prod => Number(prod.productId) === Number(product.id));
      
         if(!existproduct){
-            throw new Error("product not found");
-        }
-        else if (existproduct.count>1) {
+            throw new Error("product not found in basket");
+        } else if (existproduct.count > 1) {
             existproduct.count -= 1;
-        }
-        else{
+        } else {
             userbasket = this.RemoveProductBasket(userId, productId);
         }
 
@@ -190,13 +222,12 @@ export class BasketDB {
 
         if (index !== -1) {
             allbasket[index] = userbasket;
-        }
-        else {
+        } else {
             allbasket.push(userbasket);
         }
 
         fs.writeFileSync(filePath, JSON.stringify(allbasket, null, 2));
         
-        return userbasket
+        return userbasket;
     }
 }
