@@ -1,6 +1,7 @@
 // src/ts/components/auth/loginComponent.ts
 import '../../../CSS/style_authorization.css'; 
 import { Router } from '../../main';
+import { LoginBody, LoginResponse } from '../../types/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

@@ -1,23 +1,17 @@
 // src/ts/components/shop/productComponent.ts
 import '../../../CSS/style_main.css'; 
 import { Router } from '../../main';
+import { Product } from '../../types/api';
+import { responseToJson } from '../../utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    categories?: string[];
-    images?: { preview: string; };
-    delivery?: { startTown: { town: string; country: string }; earlyDate: Date; price: number };
-    discount?: number;
-    isAvailable?: boolean;
-}
-
-export async function renderProduct(container: HTMLElement) {
-    // Получаем ID из URL (например, /product?id=5)
+/**
+ * Загружает и отображает детальную страницу товара по ID из URL.
+ * @param {HTMLElement} container Контейнер для рендера страницы товара.
+ * @returns {Promise<void>}
+ */
+export async function renderProduct(container: HTMLElement): Promise<void> {
     const params = new URLSearchParams(window.location.search);
     const productId = params.get('id');
 

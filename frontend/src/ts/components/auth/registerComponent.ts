@@ -1,6 +1,8 @@
 // src/ts/components/auth/registerComponent.ts
 import '../../../CSS/style_registration.css'; 
 import { Router } from '../../main';
+import { RegisterBody, RegisterResponse } from '../../types/api';
+import { responseToJson } from 'src/ts/utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -85,7 +87,7 @@ export function renderRegistration(container: HTMLElement) {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, password, email, phone }),
-                    credentials: 'include' // Это установит HttpOnly куку
+                    credentials: 'include'
                 });
                 const data = await response.json();
                 if (response.ok) {

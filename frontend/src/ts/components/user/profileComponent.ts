@@ -1,13 +1,8 @@
 // src/ts/components/user/profileComponent.ts
 import '../../../CSS/style_profile.css';
 import { Router } from '../../main';
-
-interface UserProfile {
-    id?: number;
-    name?: string;
-    email?: string;
-    phone?: string;
-}
+import { UserProfile } from '../../types/api';
+import { responseToJson } from '../../utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

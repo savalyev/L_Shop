@@ -1,29 +1,9 @@
 // src/ts/components/shop/homeComponent.ts
 import '../../../CSS/style_main.css'; 
 import { Router } from '../../main';
-
-// --- СТРОГАЯ ТИПИЗАЦИЯ ---
-interface Product {
-    id: number;
-    title: string;
-    price: number;
-    description: string;
-    categories?: string[];
-    images?: { preview: string; };
-    discount?: number;
-    isAvailable?: boolean;
-}
-
-interface BasketItem {
-    productId: number;
-    count: number;
-}
-
-interface BasketData {
-    id?: number;
-    userId?: number;
-    basket?: BasketItem[];
-}
+import { Product, BasketItem, BasketData } from '../../types/api';
+import { responseToJson } from '../../utils/api';
+import { createProductCard } from '../ui/ProductCard';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 let isUserAuthorized = false;
@@ -274,7 +254,11 @@ async function handleSearch() {
     }
 }
 
-async function loadProducts() {
+/**
+ * Загружает список товаров с учётом выбранных фильтров и сортировки.
+ * @returns {Promise<void>}
+ */
+async function loadProducts(): Promise<void> {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
     
@@ -322,7 +306,12 @@ async function loadProducts() {
     }
 }
 
-function renderProductCards(products: Product[]) {
+/**
+ * Рендерит карточки товаров в сетку каталога.
+ * @param {Product[]} products Массив товаров для отображения.
+ * @returns {void}
+ */
+function renderProductCards(products: Product[]): void {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
 
@@ -333,18 +322,7 @@ function renderProductCards(products: Product[]) {
 
     grid.innerHTML = '';
     products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.style.cursor = 'pointer'; // Добавили курсор-пальчик
-        card.innerHTML = `
-            <img src="${product.images?.preview || ''}" class="product-img" alt="${product.title}">
-            <div data-title class="product-title">${product.title}</div>
-            <div class="product-desc">${product.description}</div>
-            <div class="product-bottom">
-                <div data-price class="product-price">${product.price} BYN</div>
-                <button class="add-btn" data-id="${product.id}">В корзину</button>
-            </div>
-        `;
+        const card = createProductCard(product, (id) => Router.navigate(`/product?id=${id}`));
         grid.appendChild(card);
     });
 }
@@ -404,7 +382,12 @@ async function updateCartCounter() {
     } catch (e) {}
 }
 
-async function loadCartItems() {
+/**
+ * Загружает содержимое корзины текущего пользователя.
+ * @param {HTMLElement} container Контейнер для рендера корзины.
+ * @returns {Promise<void>}
+ */
+async function loadCartItems(): Promise<void> {
     const container = document.getElementById('cartItems');
     if (!container) return;
     container.innerHTML = '<p>Загрузка...</p>';
@@ -474,14 +457,4 @@ async function loadCartItems() {
     } catch (e) {
         container.innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки корзины</p>';
     }
-}
-
-// Утилита для разбора ответа сервера
-async function responseToJson(res: Response) {
-    const text = await res.text();
-    if (!text) return {};
-    try {
-        const data = JSON.parse(text);
-        return data.data !== undefined ? data.data : data; 
-    } catch(e) { return {}; }
 }

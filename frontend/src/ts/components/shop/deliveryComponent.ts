@@ -1,16 +1,10 @@
-// src/ts/components/shop/deliveryComponent.ts
 import '../../../CSS/style_main.css';
 import { Router } from '../../main';
+import { Address } from '../../types/api';
+import { responseToJson } from '../../utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// Интерфейс адреса, как в твоем бэкенде
-interface Address {
-    country?: string;
-    town?: string;
-    street?: string;
-    houseNumber?: string;
-}
 
 export function renderDelivery(container: HTMLElement) {
     container.innerHTML = `
