@@ -24,3 +24,8 @@ export default defineConfig({
     open: '/' //
   }
 });
+// src/vite-env.d.ts
+declare module '*?raw' {
+  const content: string;
+  export default content;
+}

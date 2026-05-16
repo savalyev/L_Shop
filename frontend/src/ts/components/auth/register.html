@@ -1,0 +1,46 @@
+<div class="auth-page">
+    <div class="auth-card" style="max-width: 500px;">
+        <a href="#" class="auth-logo">REUTKUPI</a>
+        <h1 class="auth-title">Создать аккаунт</h1>
+        <p class="auth-subtitle">Присоединяйтесь к нам для удобных покупок</p>
+        
+        <div id="errorMessage" class="message msg-error" style="display: none;"></div>
+        <div id="successMessage" class="message msg-success" style="display: none;"></div>
+        
+        <!-- Атрибут data-registration добавлен по ТЗ -->
+        <form class="auth-form" id="registerForm" data-registration>
+            <div class="auth-input-wrapper">
+                <label for="name">Имя</label>
+                <input type="text" id="name" class="auth-input" placeholder="Как к вам обращаться?" required>
+            </div>
+            
+            <div class="reg-grid">
+                <div class="auth-input-wrapper">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="auth-input" placeholder="example@mail.com" required>
+                </div>
+                <div class="auth-input-wrapper">
+                    <label for="phone-number">Телефон</label>
+                    <input type="text" id="phone-number" class="auth-input" placeholder="+375 XX XXX-XX-XX" required>
+                </div>
+            </div>
+
+            <div class="reg-grid">
+                <div class="auth-input-wrapper">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" class="auth-input" placeholder="Мин. 6 символов" required>
+                </div>
+                <div class="auth-input-wrapper">
+                    <label for="confirmpassword">Повторите пароль</label>
+                    <input type="password" id="confirmpassword" class="auth-input" placeholder="Подтвердите пароль" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="auth-btn">Зарегистрироваться</button>
+        </form>
+        
+        <div class="auth-footer">
+            Уже есть аккаунт? <a href="#" id="goToLogin" class="auth-link">Войти</a>
+        </div>
+    </div>
+</div>

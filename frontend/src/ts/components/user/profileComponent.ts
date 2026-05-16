@@ -7,27 +7,21 @@ import { responseToJson } from '../../utils/api';
 const API_BASE_URL = 'http://localhost:3000/api';
 
 export function renderProfile(container: HTMLElement) {
-    container.innerHTML = `
-        <header class="shop-header">
-            <div class="container header-inner">
-                <a href="#" id="goHome" class="shop-logo">REUTKUPI</a>
-            </div>
-        </header>
+    // 1. Вставляем каркас страницы профиля
+    container.innerHTML = profileHtml;
 
-        <div class="profile-page">
-            <div class="profile-card" id="profileContent">
-                <div class="loading-spinner" style="margin: 20px auto; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #ff4757; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                <p style="text-align: center;">Загрузка данных...</p>
-            </div>
-        </div>
-    `;
+    // 2. Инициализируем базовые события
+    initProfileListeners();
 
+    // 3. Запускаем загрузку данных пользователя
+    loadUserData();
+}
+
+function initProfileListeners() {
     document.getElementById('goHome')?.addEventListener('click', (e) => {
         e.preventDefault();
         Router.navigate('/main');
     });
-
-    loadUserData();
 }
 
 async function loadUserData() {
@@ -56,55 +50,69 @@ async function loadUserData() {
              throw new Error("Бэкенд вернул объект без данных пользователя");
         }
 
-        const userName = user.name || 'Пользователь';
-        const firstLetter = userName.charAt(0).toUpperCase();
-        const userEmail = user.email || 'Не указан';
-        const userPhone = user.phone || 'Не указан';
-
-        content.innerHTML = `
-            <div class="profile-avatar">${firstLetter}</div>
-            <h1 class="profile-name">${userName}</h1>
-            <p class="profile-role">Зарегистрированный покупатель</p>
-
-            <div class="profile-info-grid">
-                <div class="info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value">${userEmail}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Телефон</span>
-                    <span class="info-value">${userPhone}</span>
-                </div>
-            </div>
-
-            <button class="logout-btn" id="logoutBtn">Выйти из аккаунта</button>
-        `;
-
-        document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-            try {
-                await fetch(`${API_BASE_URL}/auth/logout`, { 
-                    method: 'POST', 
-                    credentials: 'include' 
-                });
-            } catch (e) {
-                console.error("Ошибка при выходе");
-            } finally {
-                Router.navigate('/login');
-            }
-        });
+        // Рендерим успешные данные
+        renderUserInfo(content, user);
 
     } catch (e: any) {
         console.error("Ошибка загрузки профиля:", e.message);
-        content.innerHTML = `
-            <div style="text-align: center; color: red;">
-                <h3>Упс, ошибка на стороне сервера!</h3>
-                <p style="font-size: 14px; margin-top: 10px;">${e.message}</p>
-                <button id="emergencyLogout" style="margin-top: 20px; padding: 10px 20px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;">Вернуться на страницу входа</button>
-            </div>
-        `;
-        
-        document.getElementById('emergencyLogout')?.addEventListener('click', () => {
-            Router.navigate('/login');
-        });
+        renderProfileError(content, e.message);
     }
+}
+
+// Функция для отрисовки успешного состояния
+function renderUserInfo(content: HTMLElement, user: UserProfile) {
+    const userName = user.name || 'Пользователь';
+    const firstLetter = userName.charAt(0).toUpperCase();
+    const userEmail = user.email || 'Не указан';
+    const userPhone = user.phone || 'Не указан';
+
+    content.innerHTML = `
+        <div class="profile-avatar">${firstLetter}</div>
+        <h1 class="profile-name">${userName}</h1>
+        <p class="profile-role">Зарегистрированный покупатель</p>
+
+        <div class="profile-info-grid">
+            <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">${userEmail}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Телефон</span>
+                <span class="info-value">${userPhone}</span>
+            </div>
+        </div>
+
+        <button class="logout-btn" id="logoutBtn">Выйти из аккаунта</button>
+    `;
+
+    // Обработчик кнопки выхода
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+        try {
+            await fetch(`${API_BASE_URL}/auth/logout`, { 
+                method: 'POST', 
+                credentials: 'include' 
+            });
+            // Очищаем локальные флаги авторизации, если они были
+            localStorage.removeItem('isAuthorized');
+        } catch (e) {
+            console.error("Ошибка при выходе");
+        } finally {
+            Router.navigate('/login');
+        }
+    });
+}
+
+// Функция для отрисовки состояния ошибки
+function renderProfileError(content: HTMLElement, errorMessage: string) {
+    content.innerHTML = `
+        <div style="text-align: center; color: red;">
+            <h3>Упс, ошибка на стороне сервера!</h3>
+            <p style="font-size: 14px; margin-top: 10px;">${errorMessage}</p>
+            <button id="emergencyLogout" style="margin-top: 20px; padding: 10px 20px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;">Вернуться на страницу входа</button>
+        </div>
+    `;
+    
+    document.getElementById('emergencyLogout')?.addEventListener('click', () => {
+        Router.navigate('/login');
+    });
 }

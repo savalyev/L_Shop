@@ -20,20 +20,20 @@ export async function renderProduct(container: HTMLElement): Promise<void> {
         return;
     }
 
-    container.innerHTML = `
-        <header class="shop-header">
-            <div class="container header-inner">
-                <a href="#" id="goHome" class="shop-logo">REUTKUPI</a>
-                <div class="header-actions">
-                    <button class="action-btn" id="goBackBtn">⬅ Назад в каталог</button>
-                </div>
-            </div>
-        </header>
-        <main class="container" id="productContainer" style="padding: 40px 15px;">
-            <div class="loading-spinner"></div>
-        </main>
-    `;
+    // 1. Вставляем каркас страницы
+    container.innerHTML = productHtml;
 
+    // 2. Инжектируем модалку корзины
+    injectCartModal(container);
+
+    // 3. Инициализируем навигацию и корзину
+    initEventListeners();
+
+    // 4. Загружаем данные товара
+    await loadAndRenderProductDetails(productId);
+}
+
+function initEventListeners() {
     document.getElementById('goHome')?.addEventListener('click', (e) => {
         e.preventDefault();
         Router.navigate('/main');
@@ -43,6 +43,20 @@ export async function renderProduct(container: HTMLElement): Promise<void> {
         Router.navigate('/main');
     });
 
+    // Открытие модалки корзины
+    document.getElementById('openCartBtn')?.addEventListener('click', async (e) => { 
+        e.preventDefault();
+        // Проверяем авторизацию перед открытием
+        const authRes = await fetch(`${API_BASE_URL}/users/me`, { credentials: 'include' });
+        if (!authRes.ok) {
+            Router.navigate('/login');
+            return;
+        }
+        openCartModal(); 
+    });
+}
+
+async function loadAndRenderProductDetails(productId: string) {
     const productContainer = document.getElementById('productContainer');
     if (!productContainer) return;
 
@@ -57,61 +71,60 @@ export async function renderProduct(container: HTMLElement): Promise<void> {
             return;
         }
 
-        // Рендерим саму карточку (по ТЗ оставляем data-title и data-price)
-        productContainer.innerHTML = `
-            <div style="display: flex; gap: 40px; flex-wrap: wrap; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-                <div style="flex: 1; min-width: 300px;">
-                    <img src="${product.images?.preview || ''}" alt="${product.title}" style="width: 100%; border-radius: 12px; object-fit: cover; aspect-ratio: 1/1; border: 1px solid #eee;">
-                </div>
-                
-                <div style="flex: 1.5; min-width: 300px; display: flex; flex-direction: column; gap: 20px;">
-                    <h1 data-title style="margin: 0; font-size: 32px; color: #333;">${product.title}</h1>
-                    
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        ${product.categories?.map(c => `<span style="background: #f0f0f0; padding: 5px 12px; border-radius: 20px; font-size: 14px; color: #666;">${c}</span>`).join('') || ''}
-                    </div>
+        // Обновляем счетчик корзины, если пользователь авторизован
+        const authRes = await fetch(`${API_BASE_URL}/users/me`, { credentials: 'include' });
+        if (authRes.ok) {
+            updateCartCounter();
+        }
 
-                    <p style="font-size: 18px; color: #555; line-height: 1.6; margin: 0;">${product.description}</p>
-                    
-                    ${product.delivery ? `
-                    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px; color: #555;">
-                        <strong>📦 Информация о доставке:</strong><br>
-                        Откуда: ${product.delivery.startTown.town} (${product.delivery.startTown.country})<br>
-                        Стоимость: ${product.delivery.price} BYN
-                    </div>` : ''}
+        // Рендерим детали товара
+        renderProductHTML(productContainer, product);
 
-                    <div style="margin-top: auto; display: flex; align-items: center; gap: 30px;">
-                        <div data-price style="font-size: 36px; font-weight: bold; color: #f91155;">${product.price} BYN</div>
-                        <button id="addToCartDetailBtn" data-id="${product.id}" style="padding: 15px 40px; font-size: 18px; background: #f91155; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s;">
-                            В корзину
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-
+        // Вешаем слушатель на кнопку добавления
         document.getElementById('addToCartDetailBtn')?.addEventListener('click', async () => {
-            // Проверяем авторизацию перед добавлением
-            const authRes = await fetch(`${API_BASE_URL}/users/me`, { credentials: 'include' });
             if (!authRes.ok) {
                 Router.navigate('/login');
                 return;
             }
-
-            try {
-                const addRes = await fetch(`${API_BASE_URL}/basket/add-to-basket`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ productId: product.id }), 
-                    credentials: 'include'
-                });
-                if (addRes.ok) alert('Товар добавлен в корзину!');
-            } catch (e) {
-                console.error('Сбой добавления');
-            }
+            // Используем импортированную функцию из cartComponent!
+            await addToCartApi(product.id, true);
         });
 
     } catch (e) {
         productContainer.innerHTML = `<p style="color: red;">Ошибка загрузки товара</p>`;
     }
+}
+
+function renderProductHTML(container: HTMLElement, product: Product) {
+    container.innerHTML = `
+        <div style="display: flex; gap: 40px; flex-wrap: wrap; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div style="flex: 1; min-width: 300px;">
+                <img src="${product.images?.preview || ''}" alt="${product.title}" style="width: 100%; border-radius: 12px; object-fit: cover; aspect-ratio: 1/1; border: 1px solid #eee;">
+            </div>
+            
+            <div style="flex: 1.5; min-width: 300px; display: flex; flex-direction: column; gap: 20px;">
+                <h1 data-title style="margin: 0; font-size: 32px; color: #333;">${product.title}</h1>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    ${product.categories?.map(c => `<span style="background: #f0f0f0; padding: 5px 12px; border-radius: 20px; font-size: 14px; color: #666;">${c}</span>`).join('') || ''}
+                </div>
+
+                <p style="font-size: 18px; color: #555; line-height: 1.6; margin: 0;">${product.description}</p>
+                
+                ${product.delivery ? `
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; font-size: 14px; color: #555;">
+                    <strong>📦 Информация о доставке:</strong><br>
+                    Откуда: ${product.delivery.startTown.town} (${product.delivery.startTown.country})<br>
+                    Стоимость: ${product.delivery.price} BYN
+                </div>` : ''}
+
+                <div style="margin-top: auto; display: flex; align-items: center; gap: 30px;">
+                    <div data-price style="font-size: 36px; font-weight: bold; color: #f91155;">${product.price} BYN</div>
+                    <button id="addToCartDetailBtn" data-id="${product.id}" style="padding: 15px 40px; font-size: 18px; background: #f91155; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s;">
+                        В корзину
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
 }
