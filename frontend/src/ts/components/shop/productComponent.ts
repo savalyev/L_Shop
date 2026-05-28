@@ -3,6 +3,8 @@ import '../../../CSS/style_main.css';
 import { Router } from '../../main';
 import { Product } from '../../types/api';
 import { responseToJson } from '../../utils/api';
+import productHtml from './product.html?raw';
+import { injectCartModal, openCartModal, addToCartApi, updateCartCounter } from './cartComponent';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

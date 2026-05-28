@@ -3,6 +3,7 @@ import '../../../CSS/style_profile.css';
 import { Router } from '../../main';
 import { UserProfile } from '../../types/api';
 import { responseToJson } from '../../utils/api';
+import profileHtml from './profile.html?raw';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

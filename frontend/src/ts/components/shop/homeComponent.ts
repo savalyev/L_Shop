@@ -4,6 +4,8 @@ import { Router } from '../../main';
 import { Product, BasketItem, BasketData } from '../../types/api';
 import { responseToJson } from '../../utils/api';
 import { createProductCard } from '../ui/ProductCard';
+import homeHtml from './home.html?raw';
+import { injectCartModal, openCartModal, addToCartApi, updateCartCounter } from './cartComponent';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 let isUserAuthorized = false;
@@ -235,22 +237,6 @@ function renderProductCards(products: Product[]): void {
     });
 }
 
-// --- API КОРЗИНЫ ---
-async function addToCartApi(productId: number, showAlert: boolean = true) {
-    try {
-        const res = await fetch(`${API_BASE_URL}/basket/add-to-basket`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId }), 
-            credentials: 'include'
-        });
-        if (res.ok) {
-            updateCartCounter();
-            if(showAlert) alert('Товар добавлен!');
-        }
-    } catch (error) { console.error('Сбой сети при добавлении в корзину'); }
-}
-
 async function removeCountFromCartApi(productId: number) {
     try {
         await fetch(`${API_BASE_URL}/basket/remove-count`, {
@@ -271,23 +257,6 @@ async function removeProductFromCartApi(productId: number) {
             credentials: 'include'
         });
     } catch (error) {}
-}
-
-async function updateCartCounter() {
-    try {
-        const res = await fetch(`${API_BASE_URL}/basket/mybasket`, { credentials: 'include' });
-        if (!res.ok) {
-            const badge = document.getElementById('cartCount');
-            if (badge) badge.textContent = '0';
-            return;
-        }
-        const data: BasketData = await responseToJson(res);
-        const cartArray: BasketItem[] = data.basket || [];
-        const count = cartArray.reduce((sum, item) => sum + item.count, 0);
-        
-        const badge = document.getElementById('cartCount');
-        if (badge) badge.textContent = count.toString();
-    } catch (e) {}
 }
 
 /**
