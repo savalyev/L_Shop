@@ -4,6 +4,7 @@ import { userRouter } from './routers/usersRouter';
 import { authRouter } from './routers/authRouter';
 import { basketRouter } from './routers/basketRouter';
 import { deliveryRouter } from './routers/deliveryRouter';
+import { rolesRouter } from './routers/rolesRouter';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
@@ -46,6 +47,7 @@ app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/basket', basketRouter);
 app.use('/api/delivery', deliveryRouter);
+app.use('/api/roles', rolesRouter);
 
 app.listen(PORT, () => {
     console.log(`Сервер запущен на http://localhost:${PORT}`);

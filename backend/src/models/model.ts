@@ -7,6 +7,7 @@ export interface User {
     email?: string;
     phone?: string;
     sessionId?: string;
+    role?: 'user' | 'manager' | 'admin';
 }
 
 export type Address = {
