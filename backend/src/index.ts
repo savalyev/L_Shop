@@ -6,6 +6,8 @@ import { basketRouter } from './routers/basketRouter';
 import { deliveryRouter } from './routers/deliveryRouter';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 
 
 const app: Application = express();
@@ -16,8 +18,29 @@ app.use(cors({
   credentials: true
 }));
 
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'L_Shop API',
+      version: '1.0.0',
+      description: 'Документация API для лабораторной работы'
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000'
+      }
+    ]
+  },
+  apis: ['src/routers/*.ts', './controllers/*.ts', "src/docs/*.yaml"]
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+
 app.use(express.json());
 app.use(cookieParser());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/products', productsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);

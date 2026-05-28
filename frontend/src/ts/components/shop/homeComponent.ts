@@ -1,10 +1,9 @@
 // src/ts/components/shop/homeComponent.ts
 import '../../../CSS/style_main.css'; 
 import { Router } from '../../main';
-import homeHtml from './home.html?raw';
-
-// ИМПОРТИРУЕМ ЛОГИКУ КОРЗИНЫ
-import { injectCartModal, openCartModal, addToCartApi, updateCartCounter, Product } from './cartComponent';
+import { Product, BasketItem, BasketData } from '../../types/api';
+import { responseToJson } from '../../utils/api';
+import { createProductCard } from '../ui/ProductCard';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 let isUserAuthorized = false;
@@ -168,7 +167,11 @@ async function handleSearch() {
     }
 }
 
-async function loadProducts() {
+/**
+ * Загружает список товаров с учётом выбранных фильтров и сортировки.
+ * @returns {Promise<void>}
+ */
+async function loadProducts(): Promise<void> {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
     
@@ -211,7 +214,12 @@ async function loadProducts() {
     }
 }
 
-function renderProductCards(products: Product[]) {
+/**
+ * Рендерит карточки товаров в сетку каталога.
+ * @param {Product[]} products Массив товаров для отображения.
+ * @returns {void}
+ */
+function renderProductCards(products: Product[]): void {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
 
@@ -222,18 +230,139 @@ function renderProductCards(products: Product[]) {
 
     grid.innerHTML = '';
     products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.style.cursor = 'pointer';
-        card.innerHTML = `
-            <img src="${product.images?.preview || ''}" class="product-img" alt="${product.title}">
-            <div data-title class="product-title">${product.title}</div>
-            <div class="product-desc">${product.description}</div>
-            <div class="product-bottom">
-                <div data-price class="product-price">${product.price} BYN</div>
-                <button class="add-btn" data-id="${product.id}">В корзину</button>
-            </div>
-        `;
+        const card = createProductCard(product, (id) => Router.navigate(`/product?id=${id}`));
         grid.appendChild(card);
     });
+}
+
+// --- API КОРЗИНЫ ---
+async function addToCartApi(productId: number, showAlert: boolean = true) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/add-to-basket`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+        if (res.ok) {
+            updateCartCounter();
+            if(showAlert) alert('Товар добавлен!');
+        }
+    } catch (error) { console.error('Сбой сети при добавлении в корзину'); }
+}
+
+async function removeCountFromCartApi(productId: number) {
+    try {
+        await fetch(`${API_BASE_URL}/basket/remove-count`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+    } catch (error) {}
+}
+
+async function removeProductFromCartApi(productId: number) {
+    try {
+        await fetch(`${API_BASE_URL}/basket/remove-product`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId }), 
+            credentials: 'include'
+        });
+    } catch (error) {}
+}
+
+async function updateCartCounter() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/mybasket`, { credentials: 'include' });
+        if (!res.ok) {
+            const badge = document.getElementById('cartCount');
+            if (badge) badge.textContent = '0';
+            return;
+        }
+        const data: BasketData = await responseToJson(res);
+        const cartArray: BasketItem[] = data.basket || [];
+        const count = cartArray.reduce((sum, item) => sum + item.count, 0);
+        
+        const badge = document.getElementById('cartCount');
+        if (badge) badge.textContent = count.toString();
+    } catch (e) {}
+}
+
+/**
+ * Загружает содержимое корзины текущего пользователя.
+ * @param {HTMLElement} container Контейнер для рендера корзины.
+ * @returns {Promise<void>}
+ */
+async function loadCartItems(): Promise<void> {
+    const container = document.getElementById('cartItems');
+    if (!container) return;
+    container.innerHTML = '<p>Загрузка...</p>';
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/basket/mybasket`, { credentials: 'include' });
+        if (!res.ok) {
+            container.innerHTML = '<p style="text-align:center;">Ваша корзина пуста</p>';
+            const cartTotal = document.getElementById('cartTotal');
+            if (cartTotal) cartTotal.textContent = 'Итого: 0 BYN';
+            return;
+        }
+
+        const cartData: BasketData = await responseToJson(res);
+        const cartArray: BasketItem[] = (cartData as any).userbasket?.basket || cartData.basket || [];
+        
+        if (cartArray.length === 0) {
+            container.innerHTML = '<p style="text-align:center;">Ваша корзина пуста</p>';
+            const cartTotal = document.getElementById('cartTotal');
+            if (cartTotal) cartTotal.textContent = 'Итого: 0 BYN';
+            return;
+        }
+
+        const productIds = cartArray.map(item => item.productId);
+        const prodRes = await fetch(`${API_BASE_URL}/products/for-basket`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: productIds })
+        });
+        const prodData = await responseToJson(prodRes);
+        const productsInfo: Product[] = prodData.products ? prodData.products : (Array.isArray(prodData) ? prodData : []);
+
+        let total = 0;
+        
+        container.innerHTML = cartArray.map((cartItem) => {
+            const product = productsInfo.find((p) => Number(p.id) === Number(cartItem.productId));
+            if (!product) return '';
+            
+            const itemTotal = product.price * cartItem.count;
+            total += itemTotal;
+            
+            return `
+                <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <img src="${product.images?.preview || ''}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                        <div>
+                            <h4 data-title="basket" style="margin:0; font-size: 14px;">${product.title}</h4>
+                            <span data-price="basket" style="color:#f91155; font-weight:bold; font-size: 14px;">${product.price} BYN</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display:flex; align-items:center; gap: 10px;">
+                        <div class="quantity-controls" style="display:flex; align-items:center; border: 1px solid #ccc; border-radius: 4px;">
+                            <button class="cart-minus-btn" data-id="${cartItem.productId}" style="padding: 2px 8px; border:none; background:none; cursor:pointer;">-</button>
+                            <span style="padding: 0 8px;">${cartItem.count}</span>
+                            <button class="cart-add-btn" data-id="${cartItem.productId}" style="padding: 2px 8px; border:none; background:none; cursor:pointer;">+</button>
+                        </div>
+                        <button class="cart-remove-btn" data-id="${cartItem.productId}" style="border:none; background:none; color:red; cursor:pointer; font-size: 16px;">🗑️</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        const cartTotal = document.getElementById('cartTotal');
+        if (cartTotal) cartTotal.textContent = `Итого: ${total.toFixed(2)} BYN`;
+
+    } catch (e) {
+        container.innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки корзины</p>';
+    }
 }

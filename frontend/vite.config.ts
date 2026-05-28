@@ -6,11 +6,10 @@ export default defineConfig({
     outDir: 'dist',
   },
   server: {
-    // 1. ДОБАВЛЯЕМ ВОТ ЭТОТ БЛОК (чтобы Vite мог импортировать из бэка)
     fs: {
       allow: [
-        '.', // Разрешаем папку frontend
-        '../backend' // Разрешаем папку backend (проверь, чтобы папка бэкенда называлась именно так относительно фронтенда)
+        '.',
+        '../backend'
       ]
     },
     
@@ -22,8 +21,7 @@ export default defineConfig({
       }
     },
     
-    // open: '/main.html' - закомментировали
-    open: '/' // В SPA лучше открывать корень, а роутер сам кинет на /login
+    open: '/' //
   }
 });
 // src/vite-env.d.ts

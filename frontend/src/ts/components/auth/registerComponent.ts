@@ -1,8 +1,8 @@
 // src/ts/components/auth/registerComponent.ts
 import '../../../CSS/style_registration.css'; 
 import { Router } from '../../main';
-// Импортируем HTML-шаблон
-import registerHtml from './register.html?raw';
+import { RegisterBody, RegisterResponse } from '../../types/api';
+import { responseToJson } from 'src/ts/utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -53,12 +53,26 @@ async function handleRegisterSubmit(e: Event) {
         return;
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, password, email, phone }),
-            credentials: 'include' // Для установки HttpOnly cookie
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, password, email, phone }),
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    successDiv.textContent = 'Регистрация успешна!';
+                    successDiv.style.display = 'block';
+                    setTimeout(() => Router.navigate('/login'), 2000);
+                } else {
+                    errorDiv.textContent = data.error || 'Ошибка регистрации';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Ошибка соединения';
+                errorDiv.style.display = 'block';
+            }
         });
         
         const data = await response.json();

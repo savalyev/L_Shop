@@ -1,8 +1,7 @@
 // src/ts/components/auth/loginComponent.ts
 import '../../../CSS/style_authorization.css'; 
 import { Router } from '../../main';
-// Импортируем HTML как сырую строку
-import loginHtml from './login.html?raw';
+import { LoginBody, LoginResponse } from '../../types/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

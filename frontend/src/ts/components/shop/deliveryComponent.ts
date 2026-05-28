@@ -1,18 +1,10 @@
-// src/ts/components/shop/deliveryComponent.ts
 import '../../../CSS/style_main.css';
 import { Router } from '../../main';
-// Импортируем HTML-шаблон
-import deliveryHtml from './delivery.html?raw';
+import { Address } from '../../types/api';
+import { responseToJson } from '../../utils/api';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// Интерфейс адреса, как в твоем бэкенде
-interface Address {
-    country?: string;
-    town?: string;
-    street?: string;
-    houseNumber?: string;
-}
 
 export function renderDelivery(container: HTMLElement) {
     // 1. Вставляем HTML
