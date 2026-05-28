@@ -2,6 +2,7 @@ import '../../../CSS/style_main.css';
 import { Router } from '../../main';
 import { Address } from '../../types/api';
 import { responseToJson } from '../../utils/api';
+import deliveryHtml from './delivery.html?raw';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 

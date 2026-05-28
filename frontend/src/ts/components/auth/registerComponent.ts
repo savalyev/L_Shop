@@ -3,6 +3,7 @@ import '../../../CSS/style_registration.css';
 import { Router } from '../../main';
 import { RegisterBody, RegisterResponse } from '../../types/api';
 import { responseToJson } from 'src/ts/utils/api';
+import registerHtml from './register.html?raw';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
@@ -32,7 +33,6 @@ function initEventListeners() {
 async function handleRegisterSubmit(e: Event) {
     e.preventDefault();
     
-    // Получаем значения полей
     const name = (document.getElementById('name') as HTMLInputElement).value.trim();
     const phone = (document.getElementById('phone-number') as HTMLInputElement).value.trim();
     const email = (document.getElementById('email') as HTMLInputElement).value.trim();
@@ -42,45 +42,27 @@ async function handleRegisterSubmit(e: Event) {
     const errorDiv = document.getElementById('errorMessage') as HTMLDivElement;
     const successDiv = document.getElementById('successMessage') as HTMLDivElement;
     
-    // Скрываем сообщения перед новой отправкой
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
 
-    // Валидация паролей на клиенте
     if (password !== confirmPassword) {
         errorDiv.textContent = 'Пароли не совпадают';
         errorDiv.style.display = 'block';
         return;
     }
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, password, email, phone }),
-                    credentials: 'include'
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    successDiv.textContent = 'Регистрация успешна!';
-                    successDiv.style.display = 'block';
-                    setTimeout(() => Router.navigate('/login'), 2000);
-                } else {
-                    errorDiv.textContent = data.error || 'Ошибка регистрации';
-                    errorDiv.style.display = 'block';
-                }
-            } catch (error) {
-                errorDiv.textContent = 'Ошибка соединения';
-                errorDiv.style.display = 'block';
-            }
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, password, email, phone }),
+            credentials: 'include'
         });
-        
         const data = await response.json();
         
         if (response.ok) {
             successDiv.textContent = 'Регистрация успешна!';
             successDiv.style.display = 'block';
-            // Перенаправляем на логин через 2 секунды
             setTimeout(() => Router.navigate('/login'), 2000);
         } else {
             errorDiv.textContent = data.error || 'Ошибка регистрации';

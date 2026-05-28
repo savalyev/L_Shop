@@ -2,6 +2,7 @@
 import '../../../CSS/style_authorization.css'; 
 import { Router } from '../../main';
 import { LoginBody, LoginResponse } from '../../types/api';
+import loginHtml from './login.html?raw';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
