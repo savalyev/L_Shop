@@ -9,6 +9,7 @@
 ```bash
 cd backend
 npm install
+npm install --save-dev @types/swagger-jsdoc
 npm run dev
 ```
 
