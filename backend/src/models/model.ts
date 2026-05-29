@@ -55,5 +55,16 @@ export interface Comment {
   date: string;
 }
 
+export interface ProductTag {
+  productId: number;
+  tags: string[];
+}
+
+export interface UserTagPreference {
+  userId: number;
+  tagWeights: Record<string, number>;
+  lastUpdated: string;
+}
+
 export type ProductCreateBody = Omit<Product, 'id'>;
 export type UserCreateBody = Omit<User, 'id'>;

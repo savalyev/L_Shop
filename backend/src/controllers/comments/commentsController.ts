@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { CommentsService } from "../../services/comments/commentsService";
 import { UsersService } from "../../services/users/usersService";
-import { error } from "node:console";
 
 export class CommentsController {
     static async addComment(req: Request, res: Response) {
