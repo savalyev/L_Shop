@@ -45,5 +45,15 @@ export interface Delivery{
     cost: number;
 }
 
+export interface Comment {
+  id: number;
+  productId: number;
+  userId: number;
+  userName: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
 export type ProductCreateBody = Omit<Product, 'id'>;
 export type UserCreateBody = Omit<User, 'id'>;
