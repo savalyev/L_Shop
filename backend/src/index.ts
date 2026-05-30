@@ -56,3 +56,5 @@ app.use('/api/recommendations', recommendationRouter);
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
+
+export { app };

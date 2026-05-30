@@ -86,5 +86,68 @@
     "phone": "+375333227082",
     "role": "manager",
     "sessionId": ""
+  },
+  {
+    "id": 11,
+    "name": "testuser",
+    "password": "$2b$10$3YUVi0A8bZW5qbdxZmeMFuZtdtRIqAygq8HMjciWczmHOz8bd8sz.",
+    "email": "test@example.com",
+    "phone": "+1234567890",
+    "role": "user",
+    "sessionId": "7065da49ceced66603f9bbe1fe418f3c"
+  },
+  {
+    "id": 12,
+    "name": "duplicate",
+    "password": "$2b$10$R.bsaBeix1Q4Ss/Kq3JRD.LW7cuC/HKd37BE9VmDgHbIeR9jD1UBG",
+    "email": "",
+    "phone": "",
+    "role": "user",
+    "sessionId": "e6967194948f39d91232e3056eba600b"
+  },
+  {
+    "id": 13,
+    "name": "loginuser",
+    "password": "$2b$10$swiDjVCXPM8GP4OO1gLRt.xbc443x85dfuxNjY0lOKXwGUGkHdpla",
+    "email": "login@ex.com",
+    "phone": "+111",
+    "role": "user",
+    "sessionId": "03fccfbdbfd4f8012295a0e62b1fff99"
+  },
+  {
+    "id": 14,
+    "name": "logoutuser",
+    "password": "$2b$10$652zmdxbg8aOn8VxbEgnWeHjxhdJ.2ZU7oBnyo.G0OvMkZ9kn7gNi",
+    "email": "l@o.com",
+    "phone": "+222",
+    "role": "user",
+    "sessionId": ""
+  },
+  {
+    "id": 15,
+    "name": "reguser",
+    "password": "$2b$10$0x.EaIVyckY8I7luRJ3t8u3Ye34vn5wxvvdQNDB.PGSltb9Nlmr/6",
+    "email": "r@u.com",
+    "phone": "+555",
+    "role": "user",
+    "sessionId": "49352ff782a6c08fb79e2b08ad8542ec"
+  },
+  {
+    "id": 16,
+    "name": "commenter",
+    "password": "$2b$10$ZYe13nM1hcEyqBmiqHAcIOV5J0UqHLDasd89CGE.BJqjxug6oW5Ji",
+    "email": "c@c.com",
+    "phone": "+444",
+    "role": "user",
+    "sessionId": "426b32cc9be2d98486cf5b474887d058"
+  },
+  {
+    "id": 17,
+    "name": "baskettest",
+    "password": "$2b$10$Se/ar0KO4Do8ajS.wRZ7AOLCUyBQhcM02uRWdtHvjFgU8Fo8L9ZCe",
+    "email": "b@t.com",
+    "phone": "+333",
+    "role": "user",
+    "sessionId": "ed24a8942f509e9bf7aa5c9cfaa85010"
   }
 ]
