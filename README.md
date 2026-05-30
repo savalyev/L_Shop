@@ -9,6 +9,7 @@
 ```bash
 cd backend
 npm install
+npm install --save-dev @types/swagger-jsdoc
 npm run dev
 ```
 
@@ -173,6 +174,52 @@ npm run dev
         "street": "string",
         "houseNumber": "string"
     }
+}
+```
+
+---
+
+### Roles - `/api/roles`
+
+| Метод    | Путь                             | Описание                                   
+| -------- | -------------------------------- | ------------------------------------------
+| `POST`   | `/api/roles/grant-manager`      | Изменение роли пользователя на 'manager'
+| `POST`   | `/api/roles/revoke-manager`     | Изменение роли пользователя на 'user'
+| `GET`    | `/api/roles/users`                | Получение списка всех пользователей приложения
+
+#### POST `/api/roles/grant-manager` — тело запроса
+
+```json
+{
+  "userId": "number"
+}
+```
+
+#### POST `/api/roles/revoke-manager` — тело запроса
+
+```json
+{
+  "userId": "number"
+}
+```
+---
+
+
+### Comments - `/api/comments`
+
+| Метод    | Путь                                   | Описание                                   
+| -------- | -------------------------------------- | ------------------------------------------
+| `POST`   | `/api/comments`                        | Создание нового комментария
+| `GET`    | `/api/comments/product/:productId`     | Получение комментарий к продукту по его ID
+| `GET`    | `/api/comments/product/:productId/avg` | Получение среднего рейтинга продукта по его ID
+
+#### POST `/api/comments` — тело запроса
+
+```json
+{
+  "comments": "number",
+  "rating": "number",
+  "text": "string"
 }
 ```
 
