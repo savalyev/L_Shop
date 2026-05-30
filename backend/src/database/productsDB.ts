@@ -24,11 +24,15 @@ function readData(): Product[] {
     }
 }
 
+function writeData(data: Product[]) {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
 /**
  * Класс для работы с базой данных продуктов (через JSON-файл).
  */
 export class ProductDb {
-    
+
     /**
      * Получает список всех продуктов.
      * @returns {Product[]} Массив всех продуктов.
@@ -143,14 +147,14 @@ export class ProductDb {
      * @param {Partial<Product>} item - Данные нового продукта (могут быть неполными).
      * @returns {Product} Созданный продукт со всеми обязательными полями.
      */
-    static create(item: Partial<Product>): Product { 
+    static create(item: Partial<Product>): Product {
         const data = readData();
-        
+
         // Вычисляем максимальный ID. Если база пуста, начнем с 0.
-        const maxId = data.length > 0 
-            ? data.reduce((m, f) => Math.max(m, f.id || 0), 0) 
+        const maxId = data.length > 0
+            ? data.reduce((m, f) => Math.max(m, f.id || 0), 0)
             : 0;
-            
+
         const newItem: Product = {
             id: maxId + 1,
             title: item.title || '',
@@ -161,10 +165,20 @@ export class ProductDb {
             images: { preview: item.images?.preview || '' },
             discount: item.discount || 0,
         };
-        
+
         data.push(newItem);
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-        
+
         return newItem;
+    }
+
+    static update(id: number, updates: Partial<Product>): Product | undefined {
+        const data = readData();
+        const index = data.findIndex(p => p.id === id);
+        if (index === -1) return undefined;
+        const updated = { ...data[index], ...updates };
+        data[index] = updated;
+        writeData(data);
+        return updated;
     }
 }

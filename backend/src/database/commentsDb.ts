@@ -7,6 +7,7 @@ const filePath = path.resolve(__dirname, "comments.json");
 function readComments(): Comment[] {
     if (!fs.existsSync(filePath)) return [];
     const data = fs.readFileSync(filePath, 'utf-8');
+    if(!data.trim()) return [];
     return JSON.parse(data);
 }
 

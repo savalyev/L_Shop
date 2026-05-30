@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UsersService } from "../../services/users/usersService";
-import { RecommendationSerive } from "../../services/products/recommendationService";
+import { RecommendationService } from "../../services/products/recommendationService";
 import { error } from "node:console";
 
 export class RecommendationController {
@@ -12,7 +12,7 @@ export class RecommendationController {
         }
 
         const productId = Number(req.params.productId);
-        RecommendationSerive.likeProduct(user.id, productId);
+        RecommendationService.likeProduct(user.id, productId);
         res.json({ message: "Liked" });
     }
 
@@ -23,7 +23,7 @@ export class RecommendationController {
             return res.status(401).json({ error: 'Unauhorized' });
         }
 
-        const recommendedIds = RecommendationSerive.getRecommendedProducts(user.id);
+        const recommendedIds = RecommendationService.getRecommendedProducts(user.id);
         const products = recommendedIds.map(id => require('../../database/productsDB').ProductDb.getById(id)).filter(p => p);
         res.json(products);
     }

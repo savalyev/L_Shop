@@ -21,7 +21,7 @@
     "password": "$2b$10$o1Rtms416LANEfpY7wP.7.LXqUKeWC1A0dN7CZlCo/DYLyH2gDfku",
     "email": "kirill@example.com",
     "phone": "+375291234567",
-    "sessionId": "d42db42a45bab1f72edd4a31551575d7",
+    "sessionId": "80c9e98d9b477d1ef349d443fe11a82a",
     "role": "admin"
   },
   {
@@ -77,5 +77,14 @@
     "phone": "+375297459959",
     "sessionId": "4d9cb82d84613aab1f725424b8b08d1d",
     "role": "user"
+  },
+  {
+    "id": 10,
+    "name": "TestingNewModule",
+    "password": "$2b$10$wDdyJ8RD08nFEbSVNjnEGu3riaa3p0d3dwUFvk8DiVeUPR.oH5re6",
+    "email": "TestingNewModule@mail.ru",
+    "phone": "+375333227082",
+    "role": "manager",
+    "sessionId": ""
   }
 ]

@@ -1,60 +1,44 @@
 <header class="shop-header">
     <div class="container header-inner">
-        <a href="#" class="shop-logo">REUTKUPI</a>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Искать товары (нажмите Enter)...">
-            <button id="searchBtn">🔍</button>
-        </div>
-        
-        <div class="header-actions">
+        <a href="#" class="shop-logo" data-i18n="REUTKUPI">REUTKUPI</a>        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Искать товары (нажмите Enter)..." data-i18n-placeholder="search">
+            <button id="searchBtn" data-i18n="search">🔍</button>
+        </div>        <div class="header-actions">
             <button class="action-btn" id="profileButton">
                 <span>👤</span>
-                <span id="profileBtnText">Войти</span>
+                <span id="profileBtnText" data-i18n="login">Войти</span>
             </button>
             <button class="action-btn" id="openCartBtn">
                 <span>🛒</span>
-                Корзина
+                <span data-i18n="cart">Корзина</span>
                 <div class="cart-badge" id="cartCount">0</div>
             </button>
         </div>
     </div>
-</header>
-
-<main class="container">
+</header><main class="container">
     <div class="shop-controls" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <h2 class="catalog-title" style="margin: 0;">Каталог товаров</h2>
+            <h2 class="catalog-title" style="margin: 0;" data-i18n="catalog_title">Каталог товаров</h2>
             <select id="sortSelect" class="modern-select" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd;">
-                <option value="">Сортировка: По умолчанию</option>
-                <option value="asc">Сначала дешевле</option>
-                <option value="desc">Сначала дороже</option>
+                <option value="" data-i18n="sort_default">Сортировка: По умолчанию</option>
+                <option value="asc" data-i18n="sort_asc">Сначала дешевле</option>
+                <option value="desc" data-i18n="sort_desc">Сначала дороже</option>
             </select>
-        </div>
-
-        <div class="filters-panel" style="display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;">
+        </div>        <div class="filters-panel" style="display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;">
             <select id="categoryFilter" class="modern-select" style="flex: 1; min-width: 150px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
-                <option value="">Загрузка категорий...</option>
-            </select>
-            
-            <div style="display: flex; gap: 5px; align-items: center;">
-                <input type="number" id="minPrice" placeholder="Мин. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                <option value="" data-i18n="filter_category">Все категории</option>
+            </select>            <div style="display: flex; gap: 5px; align-items: center;">
+                <input type="number" id="minPrice" placeholder="Мин. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;" data-i18n-placeholder="min_price">
                 <span>-</span>
-                <input type="number" id="maxPrice" placeholder="Макс. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
-            </div>
-            
-            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 14px;">
+                <input type="number" id="maxPrice" placeholder="Макс. цена" style="width: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;" data-i18n-placeholder="max_price">
+            </div>            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 14px;">
                 <input type="checkbox" id="isAvailable">
-                Только в наличии
-            </label>
-            
-            <button id="applyFiltersBtn" style="padding: 8px 15px; background: #f91155; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: auto;">
+                <span data-i18n="filter_available">Только в наличии</span>
+            </label>            <button id="applyFiltersBtn" style="padding: 8px 15px; background: #f91155; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: auto;" data-i18n="apply_filters">
                 Применить фильтры
             </button>
         </div>
-    </div>
-
-    <div class="products-grid" id="productsGrid">
-        <div class="loading-spinner"></div>
+    </div>    <div class="products-grid" id="productsGrid">
+        <div class="loading-spinner" data-i18n="loading">Загрузка...</div>
     </div>
 </main>

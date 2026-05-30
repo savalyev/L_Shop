@@ -1,6 +1,7 @@
-import {Router} from 'express';
+import { Router } from 'express';
 import { ProductsController } from '../controllers/products/productsController';
 import { validateProductCreate } from '../middlewares/productMiddleware';
+import { requireRole } from '../middlewares/roleMiddleware';
 
 const productsRouter = Router();
 
@@ -222,7 +223,9 @@ productsRouter.get('/:id', ProductsController.getById);
  *       400:
  *         description: Ошибка валидации — некорректные данные в теле запроса
  */
-productsRouter.post('/', validateProductCreate, ProductsController.create);
+productsRouter.post('/', requireRole(['manager', 'admin']), validateProductCreate, ProductsController.create);
+
+productsRouter.put('/:id', requireRole(['manager', 'admin']), ProductsController.update);
 
 /**
  * @openapi
@@ -259,4 +262,4 @@ productsRouter.post('/', validateProductCreate, ProductsController.create);
  */
 productsRouter.post("/for-basket", ProductsController.getByMassId);
 
-export {productsRouter};
+export { productsRouter };

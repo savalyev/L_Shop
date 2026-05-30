@@ -24,7 +24,7 @@ function writeUserTags(data: UserTagPreference[]) {
     fs.writeFileSync(userTagsFilePath, JSON.stringify(data, null, 2));
 }
 
-export class RecommendationSerive {
+export class RecommendationService {
     static addProductTags(productId: number, tags: string[]) {
         const productTags = readProductTags();
         const existing = productTags.find(p => p.productId === productId);

@@ -1,0 +1,20 @@
+[
+  {
+    "productId": 2,
+    "userId": 10,
+    "userName": "TestingNewModule",
+    "rating": 5,
+    "text": "Мандарина имба, всем советую!",
+    "date": "2026-05-30T07:51:07.978Z",
+    "id": 1
+  },
+  {
+    "productId": 2,
+    "userId": 3,
+    "userName": "kirill",
+    "rating": 1,
+    "text": "Мандарины говно",
+    "date": "2026-05-30T07:52:10.299Z",
+    "id": 2
+  }
+]

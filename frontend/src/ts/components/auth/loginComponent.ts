@@ -1,28 +1,21 @@
-// src/ts/components/auth/loginComponent.ts
-import '../../../CSS/style_authorization.css'; 
+import '../../../CSS/style_authorization.css';
 import { Router } from '../../main';
-import { LoginBody, LoginResponse } from '../../types/api';
 import loginHtml from './login.html?raw';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
 export function renderLogin(container: HTMLElement) {
-    // 1. Рендерим верстку
     container.innerHTML = loginHtml;
-
-    // 2. Инициализируем обработчики событий после добавления HTML в DOM
     initEventListeners();
 }
 
 function initEventListeners() {
-    // Обработка перехода на регистрацию
     const goToRegBtn = document.getElementById('goToReg');
     goToRegBtn?.addEventListener('click', (e) => {
         e.preventDefault();
-        Router.navigate('/register'); 
+        Router.navigate('/register');
     });
 
-    // Обработка формы
     const form = document.getElementById('loginForm') as HTMLFormElement;
     if (form) {
         form.addEventListener('submit', handleLoginSubmit);
@@ -31,14 +24,13 @@ function initEventListeners() {
 
 async function handleLoginSubmit(e: Event) {
     e.preventDefault();
-    
+
     const loginInput = (document.getElementById('login') as HTMLInputElement).value.trim();
     const passwordInput = (document.getElementById('password') as HTMLInputElement).value;
-    
+
     const errorDiv = document.getElementById('errorMessage') as HTMLDivElement;
     const successDiv = document.getElementById('successMessage') as HTMLDivElement;
 
-    // Сбрасываем сообщения
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
 
@@ -49,9 +41,9 @@ async function handleLoginSubmit(e: Event) {
             body: JSON.stringify({ login: loginInput, password: passwordInput }),
             credentials: 'include'
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             successDiv.textContent = 'Вход выполнен успешно!';
             successDiv.style.display = 'block';
