@@ -1,17 +1,16 @@
 <header class="shop-header">
     <div class="container header-inner">
-        <a href="#" id="goHome" class="shop-logo">REUTKUPI</a>
+        <a href="#" id="goHome" class="shop-logo" data-i18n="REUTKUPI">REUTKUPI</a>
         <div class="header-actions">
-            <!-- Добавим кнопку корзины и сюда тоже! -->
             <button class="action-btn" id="openCartBtn">
                 <span>🛒</span>
-                Корзина
+                <span data-i18n="cart">Корзина</span>
                 <div class="cart-badge" id="cartCount">0</div>
             </button>
-            <button class="action-btn" id="goBackBtn">⬅ Назад в каталог</button>
+            <button class="action-btn" id="goBackBtn" data-i18n="back">⬅ Назад в каталог</button>
         </div>
     </div>
 </header>
 <main class="container" id="productContainer" style="padding: 40px 15px;">
-    <div class="loading-spinner"></div>
+    <div class="loading-spinner" data-i18n="loading">Загрузка...</div>
 </main>

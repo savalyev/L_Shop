@@ -122,6 +122,7 @@ export class UserDb {
             password: item.password || "",
             email: item.email || "",
             phone: item.phone || "",
+            role: 'user'
         };
         
         data.push(newItem);

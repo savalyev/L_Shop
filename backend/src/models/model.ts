@@ -7,6 +7,7 @@ export interface User {
     email?: string;
     phone?: string;
     sessionId?: string;
+    role?: 'user' | 'manager' | 'admin';
 }
 
 export type Address = {
@@ -42,6 +43,27 @@ export interface Delivery{
     endDate: Date;
     basket:Basket;
     cost: number;
+}
+
+export interface Comment {
+  id: number;
+  productId: number;
+  userId: number;
+  userName: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+export interface ProductTag {
+  productId: number;
+  tags: string[];
+}
+
+export interface UserTagPreference {
+  userId: number;
+  tagWeights: Record<string, number>;
+  lastUpdated: string;
 }
 
 export type ProductCreateBody = Omit<Product, 'id'>;

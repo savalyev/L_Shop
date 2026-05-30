@@ -3,7 +3,7 @@ import { Product } from "../../models/model";
 import { ProductCreateBody } from "../../models/model";
 
 export class ProductsService {
-    static getAll(): Product[]{
+    static getAll(): Product[] {
         return ProductDb.getAll();
     }
 
@@ -27,7 +27,7 @@ export class ProductsService {
         return ProductDb.getAllAscending();
     }
 
-    static  getAllDescending(): Product[] {
+    static getAllDescending(): Product[] {
         return ProductDb.getAllDescending();
     }
 
@@ -35,11 +35,16 @@ export class ProductsService {
         category?: string;
         isAvailable?: boolean;
         minPrice?: number;
-        maxPrice?: number;}): Product[] {
+        maxPrice?: number;
+    }): Product[] {
         return ProductDb.getAllFiltered(options);
     }
 
     static create(item: ProductCreateBody): Product {
         return ProductDb.create(item);
+    }
+
+    static update(id: number, updates: Partial<Product>): Product | undefined {
+        return ProductDb.update(id, updates);
     }
 }

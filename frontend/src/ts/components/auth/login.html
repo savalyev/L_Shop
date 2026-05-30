@@ -1,28 +1,19 @@
 <div class="auth-page">
     <div class="auth-card">
-        <a href="#" class="auth-logo">REUTKUPI</a>
-        <h1 class="auth-title">С возвращением!</h1>
-        <p class="auth-subtitle">Войдите, чтобы продолжить покупки</p>
-        
-        <div id="errorMessage" class="message msg-error" style="display: none;"></div>
-        <div id="successMessage" class="message msg-success" style="display: none;"></div>
-
-        <form class="auth-form" id="loginForm">
+        <a href="#" class="auth-logo" data-i18n="REUTKUPI">REUTKUPI</a>
+        <h1 class="auth-title" data-i18n="welcome_back">С возвращением!</h1>
+        <p class="auth-subtitle" data-i18n="login_subtitle">Войдите, чтобы продолжить покупки</p>        <div id="errorMessage" class="message msg-error" style="display: none;"></div>
+        <div id="successMessage" class="message msg-success" style="display: none;"></div>        <form class="auth-form" id="loginForm">
             <div class="auth-input-wrapper">
-                <label for="login">Телефон, email или имя</label>
-                <input type="text" id="login" name="login" class="auth-input" placeholder="+375... / почта / имя" required autocomplete="username">
+                <label for="login" data-i18n="login">Логин</label>
+                <input type="text" id="login" name="login" class="auth-input" placeholder="+375... / почта / имя" required autocomplete="username" data-i18n-placeholder="login_placeholder">
+            </div>            <div class="auth-input-wrapper">
+                <label for="password" data-i18n="password">Пароль</label>
+                <input type="password" id="password" name="password" class="auth-input" placeholder="Введите пароль" required autocomplete="current-password" data-i18n-placeholder="password_placeholder">
             </div>
-            
-            <div class="auth-input-wrapper">
-                <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" class="auth-input" placeholder="Введите пароль" required autocomplete="current-password">
-            </div>
-            
-            <button type="submit" class="auth-btn" id="submitBtn">Войти</button>
-        </form>
-        
-        <div class="auth-footer">
-            Ещё нет аккаунта? <a href="#" id="goToReg" class="auth-link">Зарегистрироваться</a>
+<button type="submit" class="auth-btn" data-i18n="login_submit">Войти</button>
+        </form>        <div class="auth-footer">
+            <span data-i18n="no_account">Ещё нет аккаунта?</span> <a href="#" id="goToReg" class="auth-link" data-i18n="register">Зарегистрироваться</a>
         </div>
     </div>
 </div>

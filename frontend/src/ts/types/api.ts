@@ -19,6 +19,7 @@ export interface UserProfile {
   name?: string;
   email?: string;
   phone?: string;
+  role?: 'user' | 'manager' | 'admin';
 }
 
 export interface Address {
